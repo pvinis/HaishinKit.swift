@@ -205,7 +205,6 @@
 		2915EC611D85BDF100621092 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		291F4E361CF206E200F59C51 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = Examples/iOS/Icon.png; sourceTree = "<group>"; };
 		29205CBD1E461F4E009D3FFF /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Examples/iOS/Main.storyboard; sourceTree = "<group>"; };
-		2923A1FA1D63011E0019FBCD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Examples/macOS/Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		29245AEC1D3233EB00AFFB9A /* VideoGravityUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VideoGravityUtil.swift; path = Sources/Util/VideoGravityUtil.swift; sourceTree = SOURCE_ROOT; };
 		2926A9EB1DE6B71D0074E3D2 /* MachUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MachUtil.swift; path = Sources/Util/MachUtil.swift; sourceTree = SOURCE_ROOT; };
 		2926A9F01DE6EAEB0074E3D2 /* TimerDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimerDriver.swift; path = Sources/Util/TimerDriver.swift; sourceTree = SOURCE_ROOT; };
@@ -224,17 +223,6 @@
 		295747901E37AC1000EF056E /* RTMPStreamQoSStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTMPStreamQoSStrategy.swift; path = Sources/RTMP/RTMPStreamQoSStrategy.swift; sourceTree = SOURCE_ROOT; };
 		2962425F1D8DB86500C451A3 /* TSReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TSReader.swift; path = Sources/ISO/TSReader.swift; sourceTree = SOURCE_ROOT; };
 		296242601D8DB86500C451A3 /* TSWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TSWriter.swift; path = Sources/ISO/TSWriter.swift; sourceTree = SOURCE_ROOT; };
-		296543561D62FE6200734698 /* AudioUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioUtil.swift; path = Platforms/macOS/AudioUtil.swift; sourceTree = "<group>"; };
-		296543571D62FE6200734698 /* GLLFView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GLLFView.swift; path = Platforms/macOS/GLLFView.swift; sourceTree = "<group>"; };
-		296543581D62FE6200734698 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Platforms/macOS/Info.plist; sourceTree = "<group>"; };
-		296543591D62FE6200734698 /* lf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lf.h; path = Platforms/macOS/lf.h; sourceTree = "<group>"; };
-		2965435A1D62FE6200734698 /* LFView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LFView.swift; path = Platforms/macOS/LFView.swift; sourceTree = "<group>"; };
-		296543641D62FEB700734698 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Examples/macOS/AppDelegate.swift; sourceTree = "<group>"; };
-		296543651D62FEB700734698 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Examples/macOS/Assets.xcassets; sourceTree = "<group>"; };
-		296543671D62FEB700734698 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Examples/macOS/Info.plist; sourceTree = "<group>"; };
-		296543681D62FEB700734698 /* LiveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LiveViewController.swift; path = Examples/macOS/LiveViewController.swift; sourceTree = "<group>"; };
-		296543691D62FEB700734698 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainWindowController.swift; path = Examples/macOS/MainWindowController.swift; sourceTree = "<group>"; };
-		2965436A1D62FEB700734698 /* VisualEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VisualEffect.swift; path = Examples/macOS/VisualEffect.swift; sourceTree = "<group>"; };
 		296897411CDB01D20074D5F0 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = AppDelegate.swift; path = Examples/iOS/AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		296897421CDB01D20074D5F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Examples/iOS/Assets.xcassets; sourceTree = "<group>"; };
 		296897431CDB01D20074D5F0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Examples/iOS/Info.plist; sourceTree = "<group>"; };
@@ -541,37 +529,10 @@
 			name = HTTP;
 			sourceTree = "<group>";
 		};
-		296543541D62FE3E00734698 /* macOS */ = {
-			isa = PBXGroup;
-			children = (
-				2923A1F91D63011E0019FBCD /* MainMenu.xib */,
-				296543641D62FEB700734698 /* AppDelegate.swift */,
-				296543651D62FEB700734698 /* Assets.xcassets */,
-				296543671D62FEB700734698 /* Info.plist */,
-				296543681D62FEB700734698 /* LiveViewController.swift */,
-				296543691D62FEB700734698 /* MainWindowController.swift */,
-				2965436A1D62FEB700734698 /* VisualEffect.swift */,
-			);
-			name = macOS;
-			sourceTree = "<group>";
-		};
-		296543551D62FE4A00734698 /* macOS */ = {
-			isa = PBXGroup;
-			children = (
-				296543561D62FE6200734698 /* AudioUtil.swift */,
-				296543571D62FE6200734698 /* GLLFView.swift */,
-				296543581D62FE6200734698 /* Info.plist */,
-				296543591D62FE6200734698 /* lf.h */,
-				2965435A1D62FE6200734698 /* LFView.swift */,
-			);
-			name = macOS;
-			sourceTree = "<group>";
-		};
 		2968973E1CDB01920074D5F0 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
 				2968973F1CDB01AD0074D5F0 /* iOS */,
-				296543541D62FE3E00734698 /* macOS */,
 			);
 			name = Examples;
 			sourceTree = "<group>";
@@ -647,7 +608,6 @@
 			isa = PBXGroup;
 			children = (
 				299F7E391CD71A86001E7272 /* iOS */,
-				296543551D62FE4A00734698 /* macOS */,
 			);
 			name = Platforms;
 			sourceTree = "<group>";
@@ -1084,14 +1044,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		2923A1F91D63011E0019FBCD /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2923A1FA1D63011E0019FBCD /* Base */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
 		2968974D1CDB01DD0074D5F0 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
