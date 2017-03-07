@@ -97,7 +97,7 @@ class TSWriter {
             self.currentFileHandle?.write(Data(bytes: UnsafePointer<UInt8>(bytes), count: bytes.count))
         }){ exception in
             self.currentFileHandle?.write(Data(bytes: UnsafePointer<UInt8>(bytes), count: bytes.count))
-            logger.warning("\(exception)")
+            //logger.warning("\(exception)")
         }
     }
 
@@ -134,7 +134,7 @@ class TSWriter {
             do {
                 try fileManager.createDirectory(atPath: temp, withIntermediateDirectories: false, attributes: nil)
             } catch let error as NSError {
-                logger.warning("\(error)")
+                //logger.warning("\(error)")
             }
         }
 
@@ -150,7 +150,7 @@ class TSWriter {
         if (TSWriter.defaultSegmentMaxCount <= files.count) {
             let info:M3UMediaInfo = files.removeFirst()
             do { try fileManager.removeItem(at: info.url as URL) }
-            catch let e as NSError { logger.warning("\(e)") }
+            catch let e as NSError { /* logger.warning("\(e)") */ }
         }
         currentFileURL = url
         for (pid, _) in continuityCounters {
@@ -160,7 +160,7 @@ class TSWriter {
         nstry({
             self.currentFileHandle?.synchronizeFile()
         }) { exeption in
-            logger.warning("\(exeption)")
+            //logger.warning("\(exeption)")
         }
         
         currentFileHandle?.closeFile()
@@ -178,7 +178,7 @@ class TSWriter {
         nstry({
             self.currentFileHandle?.write(Data(bytes: bytes, count: bytes.count))
         }){ exception in
-            logger.warning("\(exception)")
+            //logger.warning("\(exception)")
         }
         rotatedTimestamp = timestamp
 
@@ -189,7 +189,7 @@ class TSWriter {
         let fileManager:FileManager = FileManager.default
         for info in files {
             do { try fileManager.removeItem(at: info.url as URL) }
-            catch let e as NSError { logger.warning("\(e)") }
+            catch let e as NSError { /* logger.warning("\(e)") */ }
         }
         files.removeAll()
     }

@@ -188,7 +188,7 @@ open class HTTPService: NetService {
     }
 
     func get(_ request:HTTPRequest, client:NetClient) {
-        logger.verbose("\(request)")
+        //logger.verbose("\(request)")
         var response:HTTPResponse = HTTPResponse()
 
         // #141
@@ -200,7 +200,7 @@ open class HTTPService: NetService {
         response.headerFields["Connection"] = "close"
 
         defer {
-            logger.verbose("\(response)")
+            //logger.verbose("\(response)")
             disconnect(client)
         }
 

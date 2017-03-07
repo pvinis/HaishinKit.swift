@@ -75,9 +75,9 @@ final class RTMPSocket: NetSocket, RTMPSocketCompatible {
             doOutput(bytes: chunks[i])
         }
         doOutput(bytes: chunks.last!, locked: locked)
-        if (logger.isEnabledFor(level: .verbose)) {
-            logger.verbose(chunk)
-        }
+        //if (logger.isEnabledFor(level: .verbose)) {
+            //logger.verbose(chunk)
+        //}
         return chunk.message!.length
     }
 
@@ -141,6 +141,6 @@ final class RTMPSocket: NetSocket, RTMPSocketCompatible {
     override func didTimeout() {
         deinitConnection(isDisconnected: false)
         delegate?.dispatch(Event.IO_ERROR, bubbles: false, data: nil)
-        logger.warning("connection timedout")
+        //logger.warning("connection timedout")
     }
 }

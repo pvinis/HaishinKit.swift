@@ -56,7 +56,7 @@ class RTMPMessage {
             return RTMPAggregateMessage()
         default:
             guard let type:Type = Type(rawValue: value) else {
-                logger.error("\(value)")
+                //logger.error("\(value)")
                 return nil
             }
             return RTMPMessage(type: type)
@@ -315,7 +315,7 @@ final class RTMPCommandMessage: RTMPMessage {
                         arguments.append(try serializer.deserialize())
                     }
                 } catch {
-                    logger.error("\(self.serializer)")
+                    //logger.error("\(self.serializer)")
                 }
                 serializer.clear()
             }
@@ -410,7 +410,7 @@ final class RTMPDataMessage: RTMPMessage {
                         arguments.append(try serializer.deserialize())
                     }
                 } catch {
-                    logger.error("\(self.serializer)")
+                    //logger.error("\(self.serializer)")
                 }
                 serializer.clear()
             }
@@ -496,7 +496,7 @@ final class RTMPSharedObjectMessage: RTMPMessage {
                         }
                     }
                 } catch {
-                    logger.error("\(self.serializer)")
+                    //logger.error("\(self.serializer)")
                 }
                 serializer.clear()
             }

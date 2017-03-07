@@ -61,7 +61,7 @@ final class AudioIOComponent: IOComponent {
             mixer?.session.addOutput(output)
             output.setSampleBufferDelegate(self, queue: lockQueue)
         } catch let error as NSError {
-            logger.error("\(error)")
+            //logger.error("\(error)")
         }
         mixer?.session.commitConfiguration()
     }

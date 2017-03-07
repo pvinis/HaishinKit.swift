@@ -119,12 +119,12 @@ final class RTMPTSocket: NSObject, RTMPSocketCompatible {
 
         lastResponse = Date()
 
-        if (logger.isEnabledFor(level: .verbose)) {
-            logger.verbose("\(data):\(response):\(error)")
-        }
+        //if (logger.isEnabledFor(level: .verbose)) {
+            //logger.verbose("\(data):\(response):\(error)")
+        //}
 
         if let error:Error = error {
-            logger.error("\(error)")
+            //logger.error("\(error)")
             return
         }
 
@@ -178,46 +178,46 @@ final class RTMPTSocket: NSObject, RTMPSocketCompatible {
 
     private func didIdent2(data:Data?, response:URLResponse?, error:Error?) {
         if let error:Error = error {
-            logger.error("\(error)")
+            //logger.error("\(error)")
         }
         doRequest("/open/1", Data([0x00]), didOpen)
-        if (logger.isEnabledFor(level: .verbose)) {
-            logger.verbose("\(data?.bytes):\(response)")
-        }
+        //if (logger.isEnabledFor(level: .verbose)) {
+            //logger.verbose("\(data?.bytes):\(response)")
+        //}
     }
 
     private func didOpen(data:Data?, response:URLResponse?, error:Error?) {
         if let error:Error = error {
-            logger.error("\(error)")
+            //logger.error("\(error)")
         }
         guard let data:Data = data else {
             return
         }
         connectionID = String(data: data, encoding: String.Encoding.utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
         doRequest("/idle/\(connectionID!)/0", Data([0x00]), didIdle0)
-        if (logger.isEnabledFor(level: .verbose)) {
-            logger.verbose("\(data.bytes):\(response)")
-        }
+        //if (logger.isEnabledFor(level: .verbose)) {
+            //logger.verbose("\(data.bytes):\(response)")
+        //}
     }
 
     private func didIdle0(data:Data?, response:URLResponse?, error:Error?) {
         if let error:Error = error {
-            logger.error("\(error)")
+            //logger.error("\(error)")
         }
         connected = true
-        if (logger.isEnabledFor(level: .verbose)) {
-            logger.verbose("\(data?.bytes):\(response)")
-        }
+        //if (logger.isEnabledFor(level: .verbose)) {
+            //logger.verbose("\(data?.bytes):\(response)")
+        //}
     }
 
     private func didClose(data:Data?, response:URLResponse?, error:Error?) {
         if let error:Error = error {
-            logger.error("\(error)")
+            //logger.error("\(error)")
         }
         connected = false
-        if (logger.isEnabledFor(level: .verbose)) {
-            logger.verbose("\(data?.bytes):\(response)")
-        }
+        //if (logger.isEnabledFor(level: .verbose)) {
+            //logger.verbose("\(data?.bytes):\(response)")
+        //}
     }
 
     private func idle() {
@@ -255,9 +255,9 @@ final class RTMPTSocket: NSObject, RTMPSocketCompatible {
         request = URLRequest(url: baseURL.appendingPathComponent(pathComonent))
         request.httpMethod = "POST"
         session.uploadTask(with: request, from: data, completionHandler: completionHandler).resume()
-        if (logger.isEnabledFor(level: .verbose)) {
-            logger.verbose("\(self.request)")
-        }
+        //if (logger.isEnabledFor(level: .verbose)) {
+            //logger.verbose("\(self.request)")
+        //}
     }
 }
 

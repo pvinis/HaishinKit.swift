@@ -1,6 +1,5 @@
 import lf
 import UIKit
-import XCGLogger
 import AVFoundation
 
 let sampleRate:Double = 44_100
@@ -48,7 +47,7 @@ final class LiveViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        logger.info("viewWillAppear")
+        //logger.info("viewWillAppear")
         super.viewWillAppear(animated)
         rtmpStream.attachAudio(AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio), automaticallyConfiguresApplicationAudioSession: false)
         rtmpStream.attachCamera(DeviceUtil.device(withPosition: currentPosition))
@@ -57,7 +56,7 @@ final class LiveViewController: UIViewController {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        logger.info("viewWillDisappear")
+        //logger.info("viewWillDisappear")
         super.viewWillDisappear(animated)
         rtmpStream.removeObserver(self, forKeyPath: "currentFPS")
         rtmpStream.close()
@@ -65,7 +64,7 @@ final class LiveViewController: UIViewController {
     }
 
     @IBAction func rotateCamera(_ sender:UIButton) {
-        logger.info("rotateCamera")
+        //logger.info("rotateCamera")
         let position:AVCaptureDevicePosition = currentPosition == .back ? .front : .back
         rtmpStream.attachCamera(DeviceUtil.device(withPosition: position))
         currentPosition = position

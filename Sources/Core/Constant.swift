@@ -1,3 +1,3 @@
-import XCGLogger
+ 
 
-let logger:XCGLogger = XCGLogger.default
+let logger:XCGLogger = XCG//logger.default

@@ -78,7 +78,7 @@ final class AACEncoder: NSObject {
     fileprivate var currentBufferList:UnsafeMutableAudioBufferListPointer? = nil
     fileprivate var inSourceFormat:AudioStreamBasicDescription? {
         didSet {
-            logger.info("\(self.inSourceFormat)")
+            //logger.info("\(self.inSourceFormat)")
             guard let inSourceFormat:AudioStreamBasicDescription = self.inSourceFormat else {
                 return
             }
@@ -150,7 +150,7 @@ final class AACEncoder: NSObject {
             _converter = converter
         }
         if (status != noErr) {
-            logger.warning("\(status)")
+            //logger.warning("\(status)")
         }
         return _converter!
     }

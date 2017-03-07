@@ -38,7 +38,7 @@ final class AVCDecoder {
     private(set) var status:OSStatus = noErr {
         didSet {
             if (status != noErr) {
-                logger.warning("\(self.status)")
+                //logger.warning("\(self.status)")
             }
         }
     }

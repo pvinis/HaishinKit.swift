@@ -7,7 +7,6 @@ build
 *.xcuserstate
 *.xcscmblueprint
 .DS_Store
-Pods
 
 soe/bat/*
 soe/obj/*
@@ -16,6 +15,3 @@ soe/air/*
 soe/AIR_readme.txt
 
 build/lf.build/Release-iphoneos/lf.build/dgph
-
-Cartfile.resolved
-Carthage/*

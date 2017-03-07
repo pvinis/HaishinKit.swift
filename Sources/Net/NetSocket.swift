@@ -58,7 +58,7 @@ class NetSocket: NSObject {
                     self.doOutputProcess(fileHandle.readData(ofLength: remain))
                 }
             } catch let error as NSError {
-                logger.error("\(error)")
+                //logger.error("\(error)")
             }
         }
     }
@@ -91,7 +91,7 @@ class NetSocket: NSObject {
             self.deinitConnection(isDisconnected: isDisconnected)
             self.runloop = nil
             CFRunLoopStop(runloop.getCFRunLoop())
-            logger.verbose("isDisconnected:\(isDisconnected)")
+            //logger.verbose("isDisconnected:\(isDisconnected)")
         }
     }
 

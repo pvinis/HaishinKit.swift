@@ -122,7 +122,7 @@ extension CMVideoFormatDescription {
             &formatDescription
         )
         guard status == noErr else {
-            logger.warning("\(status)")
+            //logger.warning("\(status)")
             return nil
         }
         return formatDescription

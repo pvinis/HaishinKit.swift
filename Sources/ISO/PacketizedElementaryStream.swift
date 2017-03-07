@@ -114,7 +114,7 @@ extension PESOptionalHeader: BytesConvertible {
                 PESHeaderLength = bytes[2]
                 optionalFields = try buffer.readBytes(Int(PESHeaderLength))
             } catch {
-                logger.error("\(buffer)")
+                //logger.error("\(buffer)")
             }
         }
     }
@@ -281,7 +281,7 @@ extension PacketizedElementaryStream: BytesConvertible {
                 }
                 data = try buffer.readBytes(buffer.bytesAvailable)
             } catch {
-                logger.error("\(buffer)")
+                //logger.error("\(buffer)")
             }
         }
     }
