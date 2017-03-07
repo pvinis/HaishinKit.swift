@@ -1,3 +1,3 @@
  
 
-let logger:XCGLogger = XCG//logger.default
+//let logger:XCGLogger = XCGlogger.default
