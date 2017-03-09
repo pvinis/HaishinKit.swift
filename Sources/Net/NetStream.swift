@@ -137,6 +137,16 @@ open class NetStream: NSObject {
             )
         }
     }
+  
+  open var zoomFactor: CGFloat {
+    get {
+      return self.mixer.videoIO.zoomFactor
+    }
+  }
+  
+  open func setZoomFactor(_ zoomFactor: CGFloat, ramping: Bool = false) {
+    self.mixer.videoIO.setZoomFactor(zoomFactor, ramping: ramping)
+  }
 
     #if os(macOS)
     open func attachScreen(_ screen:AVCaptureScreenInput?) {
@@ -148,11 +158,6 @@ open class NetStream: NSObject {
     open func attachScreen(_ screen:ScreenCaptureSession?, useScreenSize:Bool = true) {
         lockQueue.async {
             self.mixer.videoIO.attachScreen(screen, useScreenSize: useScreenSize)
-        }
-    }
-    open func ramp(toVideoZoomFactor:CGFloat, withRate:Float) {
-        lockQueue.async {
-            self.mixer.videoIO.ramp(toVideoZoomFactor: toVideoZoomFactor, withRate: withRate)
         }
     }
     #endif

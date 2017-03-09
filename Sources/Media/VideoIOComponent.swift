@@ -344,21 +344,30 @@ final class VideoIOComponent: IOComponent {
         return false
     }
 
-    #if os(iOS)
-    func ramp(toVideoZoomFactor:CGFloat, withRate:Float) {
-        guard let device:AVCaptureDevice = (input as? AVCaptureDeviceInput)?.device,
-            1 <= toVideoZoomFactor && toVideoZoomFactor < device.activeFormat.videoMaxZoomFactor else {
-            return
-        }
-        do {
-            try device.lockForConfiguration()
-            device.ramp(toVideoZoomFactor: toVideoZoomFactor, withRate: withRate)
-            device.unlockForConfiguration()
-        } catch let error as NSError {
-            //logger.error("while locking device for ramp: \(error)")
-        }
+  var zoomFactor: CGFloat {
+    get {
+      guard let device:AVCaptureDevice = (input as? AVCaptureDeviceInput)?.device else { return 0 }
+      return device.videoZoomFactor
     }
-    #endif
+  }
+  
+  func setZoomFactor(_ zoomFactor: CGFloat, ramping: Bool) {
+    guard let device:AVCaptureDevice = (input as? AVCaptureDeviceInput)?.device,
+          1 <= zoomFactor && zoomFactor < device.activeFormat.videoMaxZoomFactor else {
+      return
+    }
+    do {
+      try device.lockForConfiguration()
+      if (ramping) {
+        device.ramp(toVideoZoomFactor: zoomFactor, withRate: 2.0)
+      } else {
+        device.videoZoomFactor = zoomFactor
+      }
+      device.unlockForConfiguration()
+    } catch let error as NSError {
+          //logger.error("while locking device for ramp: \(error)")
+    }
+  }
 
     func dispose() {
         drawable?.attachStream(nil)

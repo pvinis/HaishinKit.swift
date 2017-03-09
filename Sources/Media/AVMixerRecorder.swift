@@ -245,8 +245,7 @@ extension DefaultAVMixerRecorderDelegate: AVMixerRecorderDelegate {
         return input
     }
 
-    public func didFinishWriting(_ recorder:AVMixerRecorder) {
-    #if os(iOS)
+  public func didFinishWriting(_ recorder:AVMixerRecorder) {
         guard let writer:AVAssetWriter = recorder.writer else {
             return
         }
@@ -259,7 +258,6 @@ extension DefaultAVMixerRecorderDelegate: AVMixerRecorderDelegate {
                 //logger.error("\(error)")
             }
         })
-    #endif
     }
 
     public func didStartRunning(_ recorder: AVMixerRecorder) {

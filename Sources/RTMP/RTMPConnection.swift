@@ -146,42 +146,42 @@ open class RTMPConnection: EventDispatcher {
         return command
     }
 
-    /// The URL of .swf.
+    // The URL of .swf.
     open var swfUrl:String? = nil
-    /// The URL of an HTTP referer.
+    // The URL of an HTTP referer.
     open var pageUrl:String? = nil
-    /// The time to wait for TCP/IP Handshake done.
+    // The time to wait for TCP/IP Handshake done.
     open var timeout:Int64 {
         get { return socket.timeout }
         set { socket.timeout = newValue }
     }
-    /// The name of application.
+    // The name of application.
     open var flashVer:String = RTMPConnection.defaultFlashVer
-    /// The outgoing RTMPChunkSize.
+    // The outgoing RTMPChunkSize.
     open var chunkSize:Int = RTMPConnection.defaultChunkSizeS
-    /// The URI passed to the RTMPConnection.connect() method.
+    // The URI passed to the RTMPConnection.connect() method.
     open fileprivate(set) var uri:URL? = nil
-    /// This instance connected to server(true) or not(false).
+    // This instance connected to server(true) or not(false).
     open fileprivate(set) var connected:Bool = false
-    /// The object encoding for this RTMPConnection instance.
+    // The object encoding for this RTMPConnection instance.
     open var objectEncoding:UInt8 = RTMPConnection.defaultObjectEncoding
-    /// The statistics of total incoming bytes.
+    // The statistics of total incoming bytes.
     open var totalBytesIn:Int64 {
         return socket.totalBytesIn
     }
-    /// The statistics of total outgoing bytes.
+    // The statistics of total outgoing bytes.
     open var totalBytesOut:Int64 {
         return socket.totalBytesOut
     }
-    /// The statistics of total RTMPStream counts.
+    // The statistics of total RTMPStream counts.
     open var totalStreamsCount:Int {
         return streams.count
     }
-    /// The statistics of outgoing queue bytes per second.
+    // The statistics of outgoing queue bytes per second.
     dynamic open fileprivate(set) var previousQueueBytesOut:[Int64] = []
     /// The statistics of incoming bytes per second.
     dynamic open fileprivate(set) var currentBytesInPerSecond:Int32 = 0
-    /// The statistics of outgoing bytes per second.
+    // The statistics of outgoing bytes per second.
     dynamic open fileprivate(set) var currentBytesOutPerSecond:Int32 = 0
 
     var socket:RTMPSocketCompatible!
