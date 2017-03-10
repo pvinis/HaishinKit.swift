@@ -69,7 +69,7 @@ view.addSubview(lfView)
 rtmpConnection.connect("rtmp://localhost/appName/instanceName")
 rtmpStream.publish("streamName")
 // if you want to record a stream.
-// rtmpStream.publish("streamName", type: .localRecord)
+// rtmpStream.publish("streamName", type: .liveAndRecord)
 ```
 ### Settings
 ```swift
