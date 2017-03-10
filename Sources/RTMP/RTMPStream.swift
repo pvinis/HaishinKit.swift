@@ -247,7 +247,6 @@ open class RTMPStream: NetStream {
                 sampler?.startRunning()
                 if (howToPublish == .liveAndRecord) {
                     mixer.recorder.fileName = info.resourceName
-                    mixer.recorder.startRunning()
                 }
             case .closed:
                 switch oldValue {
@@ -493,6 +492,11 @@ open class RTMPStream: NetStream {
         }
     }
 
+  open func startRecording() {
+    guard howToPublish == .liveAndRecord else { return }
+    mixer.recorder.startRunning()
+  }
+  
     open func pause() {
         lockQueue.async {
             self.paused = true
