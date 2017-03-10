@@ -184,7 +184,7 @@ open class RTMPConnection: EventDispatcher {
     // The statistics of outgoing bytes per second.
     dynamic open fileprivate(set) var currentBytesOutPerSecond:Int32 = 0
 
-    var socket:RTMPSocketCompatible!
+    var socket:RTMPSocketCompatible = RTMPSocket()
     var streams:[UInt32: RTMPStream] = [:]
     var bandWidth:UInt32 = 0
     var streamsmap:[UInt16: UInt32] = [:]
@@ -248,9 +248,13 @@ open class RTMPConnection: EventDispatcher {
         timer = Timer(timeInterval: 1.0, target: self, selector: #selector(RTMPConnection.on(timer:)), userInfo: nil, repeats: true)
         switch scheme {
         case "rtmpt":
-            socket = socket is RTMPTSocket ? socket : RTMPTSocket()
+          if (!(socket is RTMPTSocket)) {
+            socket = RTMPTSocket()
+          }
         default:
-            socket = socket is RTMPSocket ? socket : RTMPSocket()
+          if (!(socket is RTMPSocket)) {
+            socket = RTMPSocket()
+          }
         }
         socket.delegate = self
         socket.securityLevel = uri.scheme == "rtmps" ? .negotiatedSSL : .none
