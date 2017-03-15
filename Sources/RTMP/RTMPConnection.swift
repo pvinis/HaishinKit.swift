@@ -390,11 +390,7 @@ open class RTMPConnection: EventDispatcher {
                     count += 1
                 }
             }
-            if (count == measureInterval - 1) {
-                for (_, stream) in streams {
-                    stream.qosStrategy.didPublishInsufficientBW(stream, withConnection: self)
-                }
-            }
+           
             previousQueueBytesOut.removeFirst()
         }
     }

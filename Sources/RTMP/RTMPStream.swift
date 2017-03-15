@@ -50,7 +50,6 @@ open class RTMPStream: NetStream {
         case drmUpdateNeeded           = "NetStream.DRM.UpdateNeeded"
         case failed                    = "NetStream.Failed"
         case multicastStreamReset      = "NetStream.MulticastStream.Reset"
-        case pauseNotify               = "NetStream.Pause.Notify"
         case publishBadName            = "NetStream.Publish.BadName"
         case publishIdle               = "NetStream.Publish.Idle"
         case publishStart              = "NetStream.Publish.Start"
@@ -66,7 +65,6 @@ open class RTMPStream: NetStream {
         case seekInvalidTime           = "NetStream.Seek.InvalidTime"
         case seekNotify                = "NetStream.Seek.Notify"
         case stepNotify                = "NetStream.Step.Notify"
-        case unpauseNotify             = "NetStream.Unpause.Notify"
         case unpublishSuccess          = "NetStream.Unpublish.Success"
         case videoDimensionChange      = "NetStream.Video.DimensionChange"
 
@@ -91,8 +89,6 @@ open class RTMPStream: NetStream {
             case .failed:
                 return "error"
             case .multicastStreamReset:
-                return "status"
-            case .pauseNotify:
                 return "status"
             case .publishBadName:
                 return "error"
@@ -123,8 +119,6 @@ open class RTMPStream: NetStream {
             case .seekNotify:
                 return "status"
             case .stepNotify:
-                return "status"
-            case .unpauseNotify:
                 return "status"
             case .unpublishSuccess:
                 return "status"
@@ -177,31 +171,29 @@ open class RTMPStream: NetStream {
     }
 
     enum ReadyState: UInt8 {
-        case initilized = 0
-        case open       = 1
-        case publish    = 4
-        case publishing = 5
-        case closed     = 6
+        case initialized
+        case open
+        case publish
+        case publishing
+        case closed
     }
 
     static let defaultID:UInt32 = 0
     open static let defaultAudioBitrate:UInt32 = AACEncoder.defaultBitrate
     open static let defaultVideoBitrate:UInt32 = AVCEncoder.defaultBitrate
-    open var qosStrategy:RTMPStreamQoSStrategy = NoneRTMPStreamQoSStrategy()
     open internal(set) var info:RTMPStreamInfo = RTMPStreamInfo()
     open fileprivate(set) var objectEncoding:UInt8 = RTMPConnection.defaultObjectEncoding
     open fileprivate(set) dynamic var currentFPS:UInt16 = 0
     
 
     var id:UInt32 = RTMPStream.defaultID
-    var readyState:ReadyState = .initilized {
+    var readyState:ReadyState = .initialized {
         didSet {
             switch readyState {
             case .open:
                 currentFPS = 0
                 frameCount = 0
                 info.clear()
-                qosStrategy.clear()
           
             case .publishing:
                 send(handlerName: "@setDataFrame", arguments: "onMetaData", createMetaData())
@@ -221,7 +213,6 @@ open class RTMPStream: NetStream {
     var audioTimestamp:Double = 0
     var videoTimestamp:Double = 0
     fileprivate(set) var muxer:RTMPMuxer = RTMPMuxer()
-    fileprivate var paused:Bool = false
     fileprivate var sampler:MP4Sampler? = nil
     fileprivate var frameCount:UInt16 = 0
     fileprivate var chunkTypes:[FLVTagType:Bool] = [:]
@@ -290,7 +281,7 @@ open class RTMPStream: NetStream {
                 return
             }
 
-            while (self.readyState == .initilized) {
+            while (self.readyState == .initialized) {
                 usleep(100)
             }
 
@@ -333,7 +324,7 @@ open class RTMPStream: NetStream {
     }
 
     open func close() {
-        if (readyState == .closed || readyState == .initilized) {
+        if (readyState == .closed || readyState == .initialized) {
             return
         }
         publish(nil)
@@ -372,45 +363,7 @@ open class RTMPStream: NetStream {
     guard howToPublish == .liveAndRecord else { return }
     mixer.recorder.startRunning()
   }
-  
-    open func pause() {
-        lockQueue.async {
-            self.paused = true
-            switch self.readyState {
-            case .publish, .publishing:
-                self.mixer.audioIO.encoder.muted = true
-                self.mixer.videoIO.encoder.muted = true
-            default:
-                break
-            }
-        }
-    }
 
-    open func resume() {
-        lockQueue.async {
-            self.paused = false
-            switch self.readyState {
-            case .publish, .publishing:
-                self.mixer.audioIO.encoder.muted = false
-                self.mixer.videoIO.encoder.muted = false
-            default:
-                break
-            }
-        }
-    }
-
-    open func togglePause() {
-        lockQueue.async {
-            switch self.readyState {
-            case .publish, .publishing:
-                self.paused = !self.paused
-                self.mixer.audioIO.encoder.muted = self.paused
-                self.mixer.videoIO.encoder.muted = self.paused
-            default:
-                break
-            }
-        }
-    }
 
     open override func appendSampleBuffer(_ sampleBuffer: CMSampleBuffer, withType: CMSampleBufferType, options: [NSObject : AnyObject]? = nil) {
         guard readyState == .publishing else {
@@ -464,7 +417,7 @@ open class RTMPStream: NetStream {
         }
         switch code {
         case RTMPConnection.Code.connectSuccess.rawValue:
-            readyState = .initilized
+            readyState = .initialized
             rtmpConnection.createStream(self)
         case RTMPStream.Code.publishStart.rawValue:
             readyState = .publishing
