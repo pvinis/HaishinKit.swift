@@ -246,17 +246,7 @@ open class RTMPConnection: EventDispatcher {
         self.uri = uri
         self.arguments = arguments
         timer = Timer(timeInterval: 1.0, target: self, selector: #selector(RTMPConnection.on(timer:)), userInfo: nil, repeats: true)
-        switch scheme {
-        case "rtmpt":
-          if (!(socket is RTMPTSocket)) {
-            socket = RTMPTSocket()
-          }
-        default:
-          if (!(socket is RTMPSocket)) {
-            socket = RTMPSocket()
-          }
-        }
-        socket.delegate = self
+      socket.delegate = self
         socket.securityLevel = uri.scheme == "rtmps" ? .negotiatedSSL : .none
         socket.connect(withName: uri.host!, port: uri.port ?? RTMPConnection.defaultPort)
     }
