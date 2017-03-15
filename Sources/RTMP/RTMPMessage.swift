@@ -593,7 +593,6 @@ final class RTMPAudioMessage: RTMPMessage {
             return
         }
         OSAtomicAdd64(Int64(payload.count), &stream.info.byteCount)
-        stream.audioPlayback.on(message: self)
     }
 
     func createAudioSpecificConfig() -> AudioSpecificConfig? {
