@@ -67,28 +67,6 @@ final class VideoIOComponent: IOComponent {
         }
     }
 
-    var torch:Bool = false {
-        didSet {
-            guard torch != oldValue else {
-                return
-            }
-            let torchMode:AVCaptureTorchMode = torch ? .on : .off
-            guard let device:AVCaptureDevice = (input as? AVCaptureDeviceInput)?.device,
-                device.isTorchModeSupported(torchMode) else {
-                //logger.warning("torchMode(\(torchMode)) is not supported")
-                return
-            }
-            do {
-                try device.lockForConfiguration()
-                device.torchMode = torchMode
-                device.unlockForConfiguration()
-            }
-            catch let error as NSError {
-                //logger.error("while setting torch: \(error)")
-            }
-        }
-    }
-
     var continuousAutofocus:Bool = false {
         didSet {
             guard continuousAutofocus != oldValue else {
@@ -226,11 +204,10 @@ final class VideoIOComponent: IOComponent {
         super.init(mixer: mixer)
         encoder.lockQueue = lockQueue
         decoder.delegate = self
-        #if os(iOS)
             if let orientation:AVCaptureVideoOrientation = DeviceUtil.videoOrientation(by: UIDevice.current.orientation) {
                 self.orientation = orientation
                 }
-        #endif
+        
     }
 
     func attachCamera(_ camera:AVCaptureDevice?) {
@@ -241,9 +218,7 @@ final class VideoIOComponent: IOComponent {
             mixer?.session.commitConfiguration()
             return
         }
-        #if os(iOS)
         screen = nil
-        #endif
         do {
             input = try AVCaptureDeviceInput(device: camera)
             mixer?.session.addOutput(output)
@@ -267,36 +242,9 @@ final class VideoIOComponent: IOComponent {
         position = camera.position
         drawable?.position = camera.position
         mixer?.session.commitConfiguration()
-
-        do {
-            try camera.lockForConfiguration()
-            let torchMode:AVCaptureTorchMode = torch ? .on : .off
-            if (camera.isTorchModeSupported(torchMode)) {
-                camera.torchMode = torchMode
-            }
-            camera.unlockForConfiguration()
-        } catch let error as NSError {
-            //logger.error("\(error)")
-        }
     }
 
-    #if os(OSX)
-    func attachScreen(_ screen:AVCaptureScreenInput?) {
-        mixer?.session.beginConfiguration()
-        output = nil
-        guard let _:AVCaptureScreenInput = screen else {
-            input = nil
-            return
-        }
-        input = screen
-        mixer?.session.addOutput(output)
-        output.setSampleBufferDelegate(self, queue: lockQueue)
-        mixer?.session.commitConfiguration()
-        if (mixer?.session.isRunning ?? false) {
-            mixer?.session.startRunning()
-        }
-    }
-    #else
+  
     func attachScreen(_ screen:ScreenCaptureSession?, useScreenSize:Bool = true) {
         guard let screen:ScreenCaptureSession = screen else {
             self.screen?.stopRunning()
@@ -313,9 +261,8 @@ final class VideoIOComponent: IOComponent {
         }
         self.screen = screen
     }
-    #endif
-
-    func effect(_ buffer:CVImageBuffer) -> CIImage {
+  
+  func effect(_ buffer:CVImageBuffer) -> CIImage {
         var image:CIImage = CIImage(cvPixelBuffer: buffer)
         for effect in effects {
             image = effect.execute(image)
@@ -387,11 +334,8 @@ extension VideoIOComponent: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         let image:CIImage = effect(buffer)
         if (!effects.isEmpty) {
-            #if os(macOS)
-            // green edge hack for OSX
-            buffer = CVPixelBuffer.create(image)!
-            #endif
-            drawable?.render(image: image, to: buffer)
+
+          drawable?.render(image: image, to: buffer)
         }
         encoder.encodeImageBuffer(
             buffer,
@@ -417,7 +361,6 @@ extension VideoIOComponent: ClockedQueueDelegate {
     }
 }
 
-#if os(iOS)
 extension VideoIOComponent: ScreenCaptureOutputPixelBufferDelegate {
     // MARK: ScreenCaptureOutputPixelBufferDelegate
     func didSet(size: CGSize) {
@@ -438,4 +381,3 @@ extension VideoIOComponent: ScreenCaptureOutputPixelBufferDelegate {
         mixer?.recorder.appendPixelBuffer(pixelBuffer, withPresentationTime: withPresentationTime)
     }
 }
-#endif

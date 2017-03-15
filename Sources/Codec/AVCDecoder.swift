@@ -10,19 +10,12 @@ protocol VideoDecoderDelegate: class {
 
 // MARK: -
 final class AVCDecoder {
-    #if os(iOS)
     static let defaultAttributes:[NSString: AnyObject] = [
         kCVPixelBufferPixelFormatTypeKey: Int(kCVPixelFormatType_32BGRA) as AnyObject,
         kCVPixelBufferIOSurfacePropertiesKey: [:] as AnyObject,
         kCVPixelBufferOpenGLESCompatibilityKey: true as AnyObject,
     ]
-    #else
-    static let defaultAttributes:[NSString: AnyObject] = [
-        kCVPixelBufferPixelFormatTypeKey: Int(kCVPixelFormatType_32BGRA) as AnyObject,
-        kCVPixelBufferIOSurfacePropertiesKey: [:] as AnyObject,
-        kCVPixelBufferOpenGLCompatibilityKey: true as AnyObject,
-    ]
-    #endif
+  
 
     var formatDescription:CMFormatDescription? = nil {
         didSet {

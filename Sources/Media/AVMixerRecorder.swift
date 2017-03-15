@@ -1,8 +1,6 @@
 import Foundation
 import AVFoundation
-#if os(iOS)
 import Photos
-#endif
 
 public protocol AVMixerRecorderDelegate: class {
     var moviesDirectory:URL { get }
@@ -154,15 +152,9 @@ open class DefaultAVMixerRecorderDelegate: NSObject {
     fileprivate var rotateTime:CMTime = kCMTimeZero
     fileprivate var clockReference:String = AVMediaTypeVideo
 
-    #if os(OSX)
-    open lazy var moviesDirectory:URL = {
-        return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.moviesDirectory, .userDomainMask, true)[0])
-    }()
-    #else
-    open lazy var moviesDirectory:URL = {
+  open lazy var moviesDirectory:URL = {
         return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
     }()
-    #endif
 }
 
 extension DefaultAVMixerRecorderDelegate: AVMixerRecorderDelegate {

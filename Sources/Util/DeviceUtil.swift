@@ -1,6 +1,4 @@
-#if os(iOS)
 import UIKit
-#endif
 import Foundation
 import AVFoundation
 
@@ -8,7 +6,6 @@ public final class DeviceUtil {
     private init() {
     }
 
-    #if os(iOS)
     static public func videoOrientation(by notification:Notification) -> AVCaptureVideoOrientation? {
         guard let device:UIDevice = notification.object as? UIDevice else {
             return nil
@@ -30,7 +27,6 @@ public final class DeviceUtil {
             return nil
         }
     }
-    #endif
 
     static public func device(withPosition:AVCaptureDevicePosition) -> AVCaptureDevice? {
         for device in AVCaptureDevice.devices() {

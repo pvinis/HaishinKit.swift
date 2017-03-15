@@ -1,6 +1,4 @@
-#if os(iOS)
 import UIKit
-#endif
 import CoreImage
 import Foundation
 import AVFoundation
@@ -26,22 +24,6 @@ open class NetStream: NSObject {
 
     open var metadata:[String:NSObject] = [:]
 
-    open var torch:Bool {
-        get {
-            var torch:Bool = false
-            lockQueue.sync {
-                torch = self.mixer.videoIO.torch
-            }
-            return torch
-        }
-        set {
-            lockQueue.async {
-                self.mixer.videoIO.torch = newValue
-            }
-        }
-    }
-
-    #if os(iOS)
     open var orientation:AVCaptureVideoOrientation {
         get {
             return mixer.videoIO.orientation
@@ -62,7 +44,7 @@ open class NetStream: NSObject {
             }
         }
     }
-    #endif
+  
 
     open var audioSettings:[String:Any] {
         get {
@@ -148,20 +130,13 @@ open class NetStream: NSObject {
     self.mixer.videoIO.setZoomFactor(zoomFactor, ramping: ramping)
   }
 
-    #if os(macOS)
-    open func attachScreen(_ screen:AVCaptureScreenInput?) {
-        lockQueue.async {
-            self.mixer.videoIO.attachScreen(screen)
-        }
-    }
-    #else
-    open func attachScreen(_ screen:ScreenCaptureSession?, useScreenSize:Bool = true) {
+  open func attachScreen(_ screen:ScreenCaptureSession?, useScreenSize:Bool = true) {
         lockQueue.async {
             self.mixer.videoIO.attachScreen(screen, useScreenSize: useScreenSize)
         }
     }
-    #endif
-
+  
+  
     open func appendSampleBuffer(_ sampleBuffer:CMSampleBuffer, withType: CMSampleBufferType, options:[NSObject: AnyObject]? = nil) {
         switch withType {
         case .audio:
@@ -190,11 +165,10 @@ open class NetStream: NSObject {
         }
     }
 
-    #if os(iOS)
+  
     @objc private func on(uiDeviceOrientationDidChange:Notification) {
         if let orientation:AVCaptureVideoOrientation = DeviceUtil.videoOrientation(by: uiDeviceOrientationDidChange) {
             self.orientation = orientation
         }
     }
-    #endif
 }

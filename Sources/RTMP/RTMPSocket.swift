@@ -82,6 +82,7 @@ final class RTMPSocket: NetSocket, RTMPSocketCompatible {
     }
 
     func connect(withName:String, port:Int) {
+      print("trying")
         networkQueue.async {
             Stream.getStreamsToHost(
                 withName: withName,

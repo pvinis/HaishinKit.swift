@@ -32,14 +32,11 @@ final class AACEncoder: NSObject {
     static let defaultSampleRate:Double = 0
     static let defaultMaximumBuffers:Int = 1
     static let defaultBufferListSize:Int = AudioBufferList.sizeInBytes(maximumBuffers: 1)
-    #if os(iOS)
     static let defaultInClassDescriptions:[AudioClassDescription] = [
         AudioClassDescription(mType: kAudioEncoderComponentType, mSubType: kAudioFormatMPEG4AAC, mManufacturer: kAppleSoftwareAudioCodecManufacturer),
         AudioClassDescription(mType: kAudioEncoderComponentType, mSubType: kAudioFormatMPEG4AAC, mManufacturer: kAppleHardwareAudioCodecManufacturer)
     ]
-    #else
-    static let defaultInClassDescriptions:[AudioClassDescription] = []
-    #endif
+  
 
     var muted:Bool = false
 

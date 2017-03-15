@@ -55,9 +55,7 @@ final class AudioIOComponent: IOComponent {
         }
         do {
             input = try AVCaptureDeviceInput(device: audio)
-            #if os(iOS)
             mixer?.session.automaticallyConfiguresApplicationAudioSession = automaticallyConfiguresApplicationAudioSession
-            #endif
             mixer?.session.addOutput(output)
             output.setSampleBufferDelegate(self, queue: lockQueue)
         } catch let error as NSError {

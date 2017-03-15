@@ -28,17 +28,10 @@ final class AVCEncoder: NSObject {
     static let defaultBitrate:UInt32 = 160 * 1024
     static let defaultScalingMode:String = "Trim"
 
-    #if os(iOS)
     static let defaultAttributes:[NSString: AnyObject] = [
         kCVPixelBufferIOSurfacePropertiesKey: [:] as AnyObject,
         kCVPixelBufferOpenGLESCompatibilityKey: true as AnyObject,
     ]
-    #else
-    static let defaultAttributes:[NSString: AnyObject] = [
-        kCVPixelBufferIOSurfacePropertiesKey: [:] as AnyObject,
-        kCVPixelBufferOpenGLCompatibilityKey: true as AnyObject,
-    ]
-    #endif
     static let defaultDataRateLimits:[Int] = [0, 0]
 
     var muted:Bool = false
@@ -192,14 +185,6 @@ final class AVCEncoder: NSObject {
             ] as NSObject
         ]
 
-#if os(OSX)
-        if (enabledHardwareEncoder) {
-            properties[kVTVideoEncoderSpecification_EncoderID] = "com.apple.videotoolbox.videoencoder.h264.gva" as NSObject
-            properties["EnableHardwareAcceleratedVideoEncoder"] = true as NSObject
-            properties["RequireHardwareAcceleratedVideoEncoder"] = true as NSObject
-        }
-#endif
-
         if (dataRateLimits != AVCEncoder.defaultDataRateLimits) {
             properties[kVTCompressionPropertyKey_DataRateLimits] = dataRateLimits as NSObject
         }
@@ -281,7 +266,7 @@ final class AVCEncoder: NSObject {
         }
     }
 
-#if os(iOS)
+
     func applicationWillEnterForeground(_ notification:Notification) {
         invalidateSession = true
     }
@@ -300,7 +285,6 @@ final class AVCEncoder: NSObject {
             break
         }
     }
-#endif
 }
 
 extension AVCEncoder: Runnable {
@@ -308,7 +292,6 @@ extension AVCEncoder: Runnable {
     func startRunning() {
         lockQueue.async {
             self.running = true
-#if os(iOS)
             NotificationCenter.default.addObserver(
                 self,
                 selector: #selector(AVCEncoder.didAudioSessionInterruption(_:)),
@@ -321,7 +304,7 @@ extension AVCEncoder: Runnable {
                 name: NSNotification.Name.UIApplicationWillEnterForeground,
                 object: nil
             )
-#endif
+
         }
     }
 
@@ -330,9 +313,8 @@ extension AVCEncoder: Runnable {
             self.session = nil
             self.lastImageBuffer = nil;
             self.formatDescription = nil
-#if os(iOS)
+
             NotificationCenter.default.removeObserver(self)
-#endif
             self.running = false
         }
     }
