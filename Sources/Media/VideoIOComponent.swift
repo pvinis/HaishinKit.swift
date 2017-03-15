@@ -1,6 +1,7 @@
 import CoreImage
 import Foundation
 import AVFoundation
+import UIKit
 
 final class VideoIOComponent: IOComponent {
     let lockQueue:DispatchQueue = DispatchQueue(label: "com.github.shogo4405.lf.VideoIOComponent.lock")
@@ -184,22 +185,8 @@ final class VideoIOComponent: IOComponent {
         }
     }
 
-    #if !os(OSX)
-    fileprivate(set) var screen:ScreenCaptureSession? = nil {
-        didSet {
-            guard oldValue != screen else {
-                return
-            }
-            if let oldValue:ScreenCaptureSession = oldValue {
-                oldValue.delegate = nil
-            }
-            if let screen:ScreenCaptureSession = screen {
-                screen.delegate = self
-            }
-        }
-    }
-    #endif
-
+  
+ 
     override init(mixer: AVMixer) {
         super.init(mixer: mixer)
         encoder.lockQueue = lockQueue
@@ -218,7 +205,6 @@ final class VideoIOComponent: IOComponent {
             mixer?.session.commitConfiguration()
             return
         }
-        screen = nil
         do {
             input = try AVCaptureDeviceInput(device: camera)
             mixer?.session.addOutput(output)
@@ -240,27 +226,9 @@ final class VideoIOComponent: IOComponent {
 
         fps = fps * 1
         position = camera.position
-        drawable?.position = camera.position
         mixer?.session.commitConfiguration()
     }
 
-  
-    func attachScreen(_ screen:ScreenCaptureSession?, useScreenSize:Bool = true) {
-        guard let screen:ScreenCaptureSession = screen else {
-            self.screen?.stopRunning()
-            self.screen = nil
-            return
-        }
-        input = nil
-        output = nil
-        if (useScreenSize) {
-            encoder.setValuesForKeys([
-                "width": screen.attributes["Width"]!,
-                "height": screen.attributes["Height"]!,
-            ])
-        }
-        self.screen = screen
-    }
   
   func effect(_ buffer:CVImageBuffer) -> CIImage {
         var image:CIImage = CIImage(cvPixelBuffer: buffer)
@@ -358,26 +326,5 @@ extension VideoIOComponent: ClockedQueueDelegate {
     // MARK: ClockedQueueDelegate
     func queue(_ buffer: CMSampleBuffer) {
         drawable?.draw(image: CIImage(cvPixelBuffer: buffer.imageBuffer!))
-    }
-}
-
-extension VideoIOComponent: ScreenCaptureOutputPixelBufferDelegate {
-    // MARK: ScreenCaptureOutputPixelBufferDelegate
-    func didSet(size: CGSize) {
-        lockQueue.async {
-            self.encoder.width = Int32(size.width)
-            self.encoder.height = Int32(size.height)
-        }
-    }
-    func output(pixelBuffer:CVPixelBuffer, withPresentationTime:CMTime) {
-        if (!effects.isEmpty) {
-            drawable?.render(image: effect(pixelBuffer), to: pixelBuffer)
-        }
-        encoder.encodeImageBuffer(
-            pixelBuffer,
-            presentationTimeStamp: withPresentationTime,
-            duration: kCMTimeInvalid
-        )
-        mixer?.recorder.appendPixelBuffer(pixelBuffer, withPresentationTime: withPresentationTime)
     }
 }

@@ -5,7 +5,6 @@ import AVFoundation
 
 protocol NetStreamDrawable: class {
     var orientation:AVCaptureVideoOrientation { get set }
-    var position:AVCaptureDevicePosition { get set }
 
     func draw(image:CIImage)
     func attachStream(_ stream:NetStream?)
@@ -129,13 +128,6 @@ open class NetStream: NSObject {
   open func setZoomFactor(_ zoomFactor: CGFloat, ramping: Bool = false) {
     self.mixer.videoIO.setZoomFactor(zoomFactor, ramping: ramping)
   }
-
-  open func attachScreen(_ screen:ScreenCaptureSession?, useScreenSize:Bool = true) {
-        lockQueue.async {
-            self.mixer.videoIO.attachScreen(screen, useScreenSize: useScreenSize)
-        }
-    }
-  
   
     open func appendSampleBuffer(_ sampleBuffer:CMSampleBuffer, withType: CMSampleBufferType, options:[NSObject: AnyObject]? = nil) {
         switch withType {

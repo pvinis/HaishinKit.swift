@@ -269,7 +269,6 @@ open class RTMPStream: NetStream {
         lockQueue.async {
             guard let name:String = name else {
                 self.readyState = .open
-                self.mixer.videoIO.screen?.stopRunning()
                 self.mixer.audioIO.encoder.delegate = nil
                 self.mixer.videoIO.encoder.delegate = nil
                 self.mixer.audioIO.encoder.stopRunning()
@@ -311,7 +310,6 @@ open class RTMPStream: NetStream {
             self.howToPublish = type
             self.muxer.dispose()
             self.muxer.delegate = self
-            self.mixer.videoIO.screen?.startRunning()
             self.mixer.audioIO.encoder.delegate = self.muxer
             self.mixer.videoIO.encoder.delegate = self.muxer
             self.sampler?.delegate = self.muxer

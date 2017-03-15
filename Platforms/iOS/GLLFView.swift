@@ -11,7 +11,6 @@ open class GLLFView: GLKView {
 
     open var videoGravity:String = AVLayerVideoGravityResizeAspect
 
-    var position:AVCaptureDevicePosition = .back
     var orientation:AVCaptureVideoOrientation = .portrait
 
     fileprivate var ciContext:CIContext!
@@ -50,17 +49,12 @@ open class GLLFView: GLKView {
         var inRect:CGRect = CGRect(x: 0, y: 0, width: CGFloat(drawableWidth), height: CGFloat(drawableHeight))
         var fromRect:CGRect = displayImage.extent
         VideoGravityUtil.calclute(videoGravity, inRect: &inRect, fromRect: &fromRect)
-        if (position == .front) {
-            ciContext.draw(displayImage.applyingOrientation(2), in: inRect, from: fromRect)
-        } else {
-            ciContext.draw(displayImage, in: inRect, from: fromRect)
-        }
+      ciContext.draw(displayImage, in: inRect, from: fromRect)
     }
 
     open func attachStream(_ stream:NetStream?) {
         if let stream:NetStream = stream {
             stream.lockQueue.async {
-                self.position = stream.mixer.videoIO.position
                 stream.mixer.videoIO.drawable = self
                 stream.mixer.startRunning()
             }
