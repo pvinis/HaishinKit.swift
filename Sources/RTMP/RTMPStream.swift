@@ -178,7 +178,8 @@ open class RTMPStream: NetStream {
         case closed
     }
 
-    static let defaultID:UInt32 = 0
+
+  static let defaultID:UInt32 = 0
     open static let defaultAudioBitrate:UInt32 = AACEncoder.defaultBitrate
     open static let defaultVideoBitrate:UInt32 = H264Encoder.defaultBitrate
     open internal(set) var info:RTMPStreamInfo = RTMPStreamInfo()
@@ -219,6 +220,7 @@ open class RTMPStream: NetStream {
     fileprivate var dispatcher:IEventDispatcher!
     fileprivate var howToPublish:RTMPStream.HowToPublish = .live
     fileprivate var rtmpConnection:RTMPConnection
+  
 
     public init(connection: RTMPConnection) {
         self.rtmpConnection = connection

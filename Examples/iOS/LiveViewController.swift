@@ -70,10 +70,6 @@ final class LiveViewController: UIViewController {
         currentPosition = position
     }
 
-    @IBAction func toggleTorch(_ sender:UIButton) {
-        rtmpStream.torch = !rtmpStream.torch
-    }
-
     @IBAction func on(slider:UISlider) {
         if (slider == audioBitrateSlider) {
             audioBitrateLabel?.text = "audio \(Int(slider.value))/kbps"
@@ -84,13 +80,9 @@ final class LiveViewController: UIViewController {
             rtmpStream.videoSettings["bitrate"] = slider.value * 1024
         }
         if (slider == zoomSlider) {
-            rtmpStream.ramp(toVideoZoomFactor: CGFloat(slider.value), withRate: 5.0)
         }
     }
 
-    @IBAction func on(pause:UIButton) {
-        rtmpStream.togglePause()
-    }
 
     @IBAction func on(close:UIButton) {
         self.dismiss(animated: true, completion: nil)
