@@ -86,7 +86,7 @@ final class H264Encoder: NSObject {
         }
     }
     var locked:UInt32 = 0
-    var lockQueue:DispatchQueue = DispatchQueue(label: "com.github.shogo4405.lf.AVCEncoder.lock")
+    var lockQueue:DispatchQueue = DispatchQueue(label: "com.github.shogo4405.lf.H264Encoder.lock")
     var expectedFPS:Float64 = AVMixer.defaultFPS {
         didSet {
             guard expectedFPS != oldValue else {
@@ -294,13 +294,13 @@ extension H264Encoder: Runnable {
             self.running = true
             NotificationCenter.default.addObserver(
                 self,
-                selector: #selector(AVCEncoder.didAudioSessionInterruption(_:)),
+                selector: #selector(H264Encoder.didAudioSessionInterruption(_:)),
                 name: NSNotification.Name.AVAudioSessionInterruption,
                 object: nil
             )
             NotificationCenter.default.addObserver(
                 self,
-                selector: #selector(AVCEncoder.applicationWillEnterForeground(_:)),
+                selector: #selector(H264Encoder.applicationWillEnterForeground(_:)),
                 name: NSNotification.Name.UIApplicationWillEnterForeground,
                 object: nil
             )
