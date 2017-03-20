@@ -9,7 +9,7 @@ open class GLLFView: GLKView {
     ]
     open static var defaultBackgroundColor:UIColor = UIColor.black
 
-    open var videoGravity:String = AVLayerVideoGravityResizeAspect
+    open var videoGravity:String = AVLayerVideoGravityResizeAspect////////////
 
     var orientation:AVCaptureVideoOrientation = .portrait
 

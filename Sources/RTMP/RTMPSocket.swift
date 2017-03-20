@@ -110,7 +110,7 @@ final class RTMPSocket: NetSocket, RTMPSocketCompatible {
             inputBuffer.removeAll()
             readyState = .handshakeDone
         case .handshakeDone:
-            if (inputBuffer.isEmpty){
+            if (inputBuffer.isEmpty) {
                 break
             }
             let bytes:[UInt8] = inputBuffer

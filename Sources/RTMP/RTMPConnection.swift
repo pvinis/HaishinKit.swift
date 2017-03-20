@@ -330,6 +330,7 @@ open class RTMPConnection: EventDispatcher {
             }
         case Code.connectClosed.rawValue:
             close(isDisconnected: true)
+          break
         default:
             break
         }
