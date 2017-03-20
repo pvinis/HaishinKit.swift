@@ -9,7 +9,7 @@ protocol VideoEncoderDelegate: class {
 }
 
 // MARK: -
-final class AVCEncoder: NSObject {
+final class H264Encoder: NSObject {
 
     static let supportedSettingsKeys:[String] = [
         "muted",
@@ -35,7 +35,7 @@ final class AVCEncoder: NSObject {
     static let defaultDataRateLimits:[Int] = [0, 0]
 
     var muted:Bool = false
-    var scalingMode:String = AVCEncoder.defaultScalingMode {
+    var scalingMode:String = H264Encoder.defaultScalingMode {
         didSet {
             guard scalingMode != oldValue else {
                 return
@@ -44,7 +44,7 @@ final class AVCEncoder: NSObject {
         }
     }
 
-    var width:Int32 = AVCEncoder.defaultWidth {
+    var width:Int32 = H264Encoder.defaultWidth {
         didSet {
             guard width != oldValue else {
                 return
@@ -52,7 +52,7 @@ final class AVCEncoder: NSObject {
             invalidateSession = true
         }
     }
-    var height:Int32 = AVCEncoder.defaultHeight {
+    var height:Int32 = H264Encoder.defaultHeight {
         didSet {
             guard height != oldValue else {
                 return
@@ -68,7 +68,7 @@ final class AVCEncoder: NSObject {
             invalidateSession = true
         }
     }
-    var bitrate:UInt32 = AVCEncoder.defaultBitrate {
+    var bitrate:UInt32 = H264Encoder.defaultBitrate {
         didSet {
             guard bitrate != oldValue else {
                 return
@@ -104,12 +104,12 @@ final class AVCEncoder: NSObject {
             }
         }
     }
-    var dataRateLimits:[Int] = AVCEncoder.defaultDataRateLimits {
+    var dataRateLimits:[Int] = H264Encoder.defaultDataRateLimits {
         didSet {
             guard dataRateLimits != oldValue else {
                 return
             }
-            if (dataRateLimits == AVCEncoder.defaultDataRateLimits) {
+            if (dataRateLimits == H264Encoder.defaultDataRateLimits) {
                 invalidateSession = true
                 return
             }
@@ -162,7 +162,7 @@ final class AVCEncoder: NSObject {
     internal(set) var running:Bool = false
     fileprivate(set) var status:OSStatus = noErr
     fileprivate var attributes:[NSString: AnyObject] {
-        var attributes:[NSString: AnyObject] = AVCEncoder.defaultAttributes
+        var attributes:[NSString: AnyObject] = H264Encoder.defaultAttributes
         attributes[kCVPixelBufferWidthKey] = NSNumber(value: width)
         attributes[kCVPixelBufferHeightKey] = NSNumber(value: height)
         return attributes
@@ -185,7 +185,7 @@ final class AVCEncoder: NSObject {
             ] as NSObject
         ]
 
-        if (dataRateLimits != AVCEncoder.defaultDataRateLimits) {
+        if (dataRateLimits != H264Encoder.defaultDataRateLimits) {
             properties[kVTCompressionPropertyKey_DataRateLimits] = dataRateLimits as NSObject
         }
         if (!isBaseline) {
@@ -203,7 +203,7 @@ final class AVCEncoder: NSObject {
         guard let sampleBuffer:CMSampleBuffer = sampleBuffer , status == noErr else {
             return
         }
-        let encoder:AVCEncoder = unsafeBitCast(outputCallbackRefCon, to: AVCEncoder.self)
+        let encoder:H264Encoder = unsafeBitCast(outputCallbackRefCon, to: H264Encoder.self)
         encoder.formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer)
         encoder.delegate?.sampleOutput(video: sampleBuffer)
     }
@@ -287,7 +287,7 @@ final class AVCEncoder: NSObject {
     }
 }
 
-extension AVCEncoder: Runnable {
+extension H264Encoder: Runnable {
     // MARK: Runnable
     func startRunning() {
         lockQueue.async {

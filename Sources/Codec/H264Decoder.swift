@@ -9,7 +9,7 @@ protocol VideoDecoderDelegate: class {
 }
 
 // MARK: -
-final class AVCDecoder {
+final class H264Decoder {
     static let defaultAttributes:[NSString: AnyObject] = [
         kCVPixelBufferPixelFormatTypeKey: Int(kCVPixelFormatType_32BGRA) as AnyObject,
         kCVPixelBufferIOSurfacePropertiesKey: [:] as AnyObject,
@@ -19,15 +19,22 @@ final class AVCDecoder {
 
     var formatDescription:CMFormatDescription? = nil {
         didSet {
+            if let atoms:[String: AnyObject] = formatDescription?.getExtension(by: "SampleDescriptionExtensionAtoms"), let avcC:Data =  atoms["avcC"] as? Data {
+                let config:AVCConfigurationRecord = AVCConfigurationRecord(data: avcC)
+                isBaseline = config.AVCProfileIndication == 66
+            }
             invalidateSession = true
         }
     }
     weak var delegate:VideoDecoderDelegate?
 
+
+    private var isBaseline:Bool = true
     private var buffers:[CMSampleBuffer] = []
     private var attributes:[NSString:AnyObject] {
-        return AVCDecoder.defaultAttributes
+        return H264Decoder.defaultAttributes
     }
+    private var minimumGroupOfPictures:Int = 12
     private(set) var status:OSStatus = noErr {
         didSet {
             if (status != noErr) {
@@ -44,7 +51,7 @@ final class AVCDecoder {
         imageBuffer:CVBuffer?,
         presentationTimeStamp:CMTime,
         duration:CMTime) in
-        let decoder:AVCDecoder = unsafeBitCast(decompressionOutputRefCon, to: AVCDecoder.self)
+        let decoder:H264Decoder = unsafeBitCast(decompressionOutputRefCon, to: H264Decoder.self)
         decoder.didOutputForSession(status, infoFlags: infoFlags, imageBuffer: imageBuffer, presentationTimeStamp: presentationTimeStamp, duration: duration)
     }
 
@@ -122,8 +129,20 @@ final class AVCDecoder {
             &sampleBuffer
         )
 
-        if let buffer:CMSampleBuffer = sampleBuffer {
+        guard let buffer:CMSampleBuffer = sampleBuffer else {
+            return
+        }
+
+        if (isBaseline) {
             delegate?.sampleOutput(video: buffer)
+        } else {
+            buffers.append(buffer)
+            buffers.sort(by: { (lhs: CMSampleBuffer, rhs: CMSampleBuffer) -> Bool in
+                return lhs.presentationTimeStamp < rhs.presentationTimeStamp
+            })
+            if (minimumGroupOfPictures <= buffers.count) {
+                delegate?.sampleOutput(video: buffers.removeFirst())
+            }
         }
     }
 
