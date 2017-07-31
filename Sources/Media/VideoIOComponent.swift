@@ -261,6 +261,9 @@ final class VideoIOComponent: IOComponent {
             if (connection.isVideoOrientationSupported) {
                 connection.videoOrientation = orientation
             }
+            if (connection.isVideoStabilizationSupported) {
+                connection.preferredVideoStabilizationMode = .standard
+            }
         }
         output.setSampleBufferDelegate(self, queue: lockQueue)
 
