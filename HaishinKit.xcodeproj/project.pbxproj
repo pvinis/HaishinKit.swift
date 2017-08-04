@@ -5,7 +5,6 @@
 	};
 	objectVersion = 48;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		2901A4EE1D437170002BBD23 /* ClockedQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2901A4ED1D437170002BBD23 /* ClockedQueue.swift */; };
 		291468191E581C8F00E619BA /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291468161E581C7D00E619BA /* Preference.swift */; };
@@ -109,6 +108,7 @@
 		29EF03781CD79A5400473D99 /* HaishinKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 299F7E3B1CD71A97001E7272 /* HaishinKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		29F6F4851DFB83E200920A3A /* RTMPHandshake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F6F4841DFB83E200920A3A /* RTMPHandshake.swift */; };
 		29FB94311E1BECCA005DE4DF /* SoundSpliter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FB94301E1BECCA005DE4DF /* SoundSpliter.swift */; };
+		AF2DFAAE1F321706007130F8 /* RTMPStreamStatsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2DFAAD1F321706007130F8 /* RTMPStreamStatsDelegate.swift */; };
 		AF6481391F2B73690067D100 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6481381F2B73690067D100 /* Logger.swift */; };
 /* End PBXBuildFile section */
 
@@ -289,6 +289,7 @@
 		29EA87EF1E79A4120043A5F8 /* CMSampleTimingInfo+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CMSampleTimingInfo+Extension.swift"; path = "Sources/Extension/CMSampleTimingInfo+Extension.swift"; sourceTree = SOURCE_ROOT; };
 		29F6F4841DFB83E200920A3A /* RTMPHandshake.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RTMPHandshake.swift; path = Sources/RTMP/RTMPHandshake.swift; sourceTree = SOURCE_ROOT; };
 		29FB94301E1BECCA005DE4DF /* SoundSpliter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SoundSpliter.swift; path = Sources/Media/SoundSpliter.swift; sourceTree = SOURCE_ROOT; };
+		AF2DFAAD1F321706007130F8 /* RTMPStreamStatsDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RTMPStreamStatsDelegate.swift; sourceTree = SOURCE_ROOT; };
 		AF6481381F2B73690067D100 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Logger.swift; path = Sources/Core/Logger.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -567,6 +568,7 @@
 				29B876A91CD70B2800FC07DA /* RTMPSocket.swift */,
 				29B876AA1CD70B2800FC07DA /* RTMPStream.swift */,
 				295747901E37AC1000EF056E /* RTMPStreamQoSDelagate.swift */,
+				AF2DFAAD1F321706007130F8 /* RTMPStreamStatsDelegate.swift */,
 				294852551D84BFAD002DE492 /* RTMPTSocket.swift */,
 			);
 			name = RTMP;
@@ -687,9 +689,9 @@
 		2945CBB41B4BE66000104112 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftMigration = 0700;
-				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0820;
+				LastSwiftMigration = 700;
+				LastSwiftUpdateCheck = 830;
+				LastUpgradeCheck = 820;
 				ORGANIZATIONNAME = "Shogo Endo";
 				TargetAttributes = {
 					2915EC511D85BDF100621092 = {
@@ -702,11 +704,11 @@
 					};
 					2945CBBC1B4BE66000104112 = {
 						CreatedOnToolsVersion = 6.4;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 800;
 					};
 					29C9327D1CD76FB800283FC5 = {
 						CreatedOnToolsVersion = 7.3;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 800;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -828,6 +830,7 @@
 				299B13271D3B751400A1E8F5 /* LFView.swift in Sources */,
 				2926A9EC1DE6B71E0074E3D2 /* MachUtil.swift in Sources */,
 				29B876AF1CD70B2800FC07DA /* RTMPChunk.swift in Sources */,
+				AF2DFAAE1F321706007130F8 /* RTMPStreamStatsDelegate.swift in Sources */,
 				29D3D4CF1ED04C4C00DD4AA6 /* VideoIOComponent+Extension.swift in Sources */,
 				29B876841CD70AE800FC07DA /* H264+AVC.swift in Sources */,
 				29B8769B1CD70B1100FC07DA /* MIME.swift in Sources */,

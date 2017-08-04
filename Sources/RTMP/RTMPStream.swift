@@ -230,6 +230,7 @@ open class RTMPStream: NetStream {
     open static let defaultAudioBitrate:UInt32 = AACEncoder.defaultBitrate
     open static let defaultVideoBitrate:UInt32 = H264Encoder.defaultBitrate
     open var qosDelegate:RTMPStreamQoSDelegate? = nil
+    open var statsDelegate:RTMPStreamStatsDelegate? = nil
     open internal(set) var info:RTMPStreamInfo = RTMPStreamInfo()
     open fileprivate(set) var objectEncoding:UInt8 = RTMPConnection.defaultObjectEncoding
     open fileprivate(set) dynamic var currentFPS:UInt16 = 0
@@ -246,7 +247,7 @@ open class RTMPStream: NetStream {
                 currentFPS = 0
                 frameCount = 0
                 info.clear()
-                qosDelegate?.clear()
+                qosDelegate?.reset()
             case .playing:
                 mixer.audioIO.playback.startRunning()
                 mixer.startPlaying()
@@ -289,6 +290,8 @@ open class RTMPStream: NetStream {
     fileprivate var audioWasSent:Bool = false
     fileprivate var videoWasSent:Bool = false
     fileprivate var rtmpConnection:RTMPConnection
+    fileprivate var previousTotalBytesIn:Int64 = 0
+    fileprivate var previousTotalBytesOut:Int64 = 0
 
     public init(connection: RTMPConnection) {
         self.rtmpConnection = connection
@@ -510,13 +513,6 @@ open class RTMPStream: NetStream {
         }
     }
 
-    open func startRecording() {
-        guard howToPublish == .liveAndRecord
-            else { return }
-
-        mixer.recorder.startRunning()
-    }
-
     open func pause() {
         lockQueue.async {
             self.paused = true
@@ -601,6 +597,17 @@ open class RTMPStream: NetStream {
         currentFPS = frameCount
         frameCount = 0
         info.on(timer: timer)
+
+        let currentBytesInPerSecond = rtmpConnection.totalBytesIn - previousTotalBytesIn
+        let currentBytesOutPerSecond = rtmpConnection.totalBytesOut - previousTotalBytesOut
+        previousTotalBytesIn = rtmpConnection.totalBytesIn
+        previousTotalBytesOut = rtmpConnection.totalBytesOut
+        statsDelegate?.stats(
+            bitrate:videoSettings["bitrate"] as! UInt,
+            currentBytesInPerSecond: UInt(currentBytesInPerSecond),
+            currentBytesOutPerSecond: UInt(currentBytesOutPerSecond),
+            previousQueueBytesOut: UInt(rtmpConnection.socket.queueBytesOut)
+        )
     }
 
     @objc private func on(status:Notification) {

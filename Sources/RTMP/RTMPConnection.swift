@@ -222,7 +222,7 @@ open class RTMPConnection: EventDispatcher {
     fileprivate var messages:[UInt16:RTMPMessage] = [:]
     fileprivate var arguments:[Any?] = []
     fileprivate var currentChunk:RTMPChunk? = nil
-    fileprivate var measureInterval:Int = 3
+    fileprivate var measureInterval:Int = 5
     fileprivate var fragmentedChunks:[UInt16:RTMPChunk] = [:]
     fileprivate var previousTotalBytesIn:Int64 = 0
     fileprivate var previousTotalBytesOut:Int64 = 0
@@ -411,17 +411,31 @@ open class RTMPConnection: EventDispatcher {
         previousQueueBytesOut.append(socket.queueBytesOut)
         for (_, stream) in streams {
             stream.on(timer: timer)
+            print("bitrate = \((stream.videoSettings["bitrate"] as! Int)/(1024*500))")
         }
         if (measureInterval <= previousQueueBytesOut.count) {
-            var count:Int = 0
-            for i in 0..<previousQueueBytesOut.count - 1 {
+            var downCount = 0
+            var upCount = 0
+            for i in 0..<(previousQueueBytesOut.count - 1) {
                 if (previousQueueBytesOut[i] < previousQueueBytesOut[i + 1]) {
-                    count += 1
+                    downCount += 1
+                } else if (previousQueueBytesOut[i] < previousQueueBytesOut[i + 1]) {
+                    upCount += 1
                 }
             }
-            if (count == measureInterval - 1) {
+            print("====")
+            print(previousQueueBytesOut)
+            print("down \(downCount)")
+            print("  up \(upCount)")
+            if (downCount == measureInterval - 1) {
                 for (_, stream) in streams {
-                    stream.qosDelegate?.didPublishInsufficientBW(stream, withConnection: self)
+                    print("will call for insuff")
+                    //stream.qosDelegate?.didPublishInsufficientBW(stream, withConnection: self)
+                }
+            } else if (upCount == measureInterval - 1) {
+                for (_, stream) in streams {
+                    print("will call for suff")
+                    //stream.qosDelegate?.didPublishSufficientBW(stream, withConnection: self)
                 }
             }
             previousQueueBytesOut.removeFirst()
