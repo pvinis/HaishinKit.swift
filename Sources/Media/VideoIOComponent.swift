@@ -190,11 +190,9 @@ final class VideoIOComponent: IOComponent {
     override init(mixer: AVMixer) {
         super.init(mixer: mixer)
         encoder.lockQueue = lockQueue
-        #if os(iOS)
             if let orientation:AVCaptureVideoOrientation = DeviceUtil.videoOrientation(by: UIDevice.current.orientation) {
                 self.orientation = orientation
                 }
-        #endif
     }
 
 #if os(iOS) || os(macOS)

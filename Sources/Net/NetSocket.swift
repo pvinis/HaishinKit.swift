@@ -74,7 +74,6 @@ public class NetSocket: NSObject {
             }
             total += length
             totalBytesOut += Int64(length)
-            print(length)
             OSAtomicAdd64(-Int64(length), &queueBytesOut)
         }
     }

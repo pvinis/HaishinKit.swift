@@ -419,12 +419,12 @@ open class RTMPConnection: EventDispatcher {
             print("  up \(upCount)")
             if (downCount == measureInterval - 1) {
                 for (_, stream) in streams {
-                    print("will call for insuff")
+                    print("=====================will call for insuff")
                     //stream.qosDelegate?.didPublishInsufficientBW(stream, withConnection: self)
                 }
             } else if (upCount == measureInterval - 1) {
                 for (_, stream) in streams {
-                    print("will call for suff")
+                    print("=============will call for suff")
                     //stream.qosDelegate?.didPublishSufficientBW(stream, withConnection: self)
                 }
             }
