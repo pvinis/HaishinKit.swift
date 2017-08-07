@@ -38,13 +38,6 @@
                                             <action selector="rotateCamera:" destination="9pv-A4-QxB" eventType="touchDown" id="516-MC-1k2"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oVn-9L-n2U">
-                                        <rect key="frame" x="286" y="24" width="39" height="30"/>
-                                        <state key="normal" title="Torch"/>
-                                        <connections>
-                                            <action selector="toggleTorch:" destination="9pv-A4-QxB" eventType="touchDown" id="gY1-x2-YlF"/>
-                                        </connections>
-                                    </button>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="2Sy-na-foy">
                                         <rect key="frame" x="166" y="62" width="201" height="29"/>
                                         <constraints>
@@ -107,7 +100,7 @@
                                             <action selector="onSlider:" destination="9pv-A4-QxB" eventType="editingChanged" id="no0-Fi-g9d"/>
                                         </connections>
                                     </slider>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="160" minValue="32" maxValue="1024" translatesAutoresizingMaskIntoConstraints="NO" id="4s5-OW-qAO">
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="512" minValue="512" maxValue="2048" translatesAutoresizingMaskIntoConstraints="NO" id="4s5-OW-qAO">
                                         <rect key="frame" x="6" y="543" width="265" height="31"/>
                                         <connections>
                                             <action selector="onSlider:" destination="9pv-A4-QxB" eventType="valueChanged" id="Nm5-Xr-jcw"/>
@@ -150,24 +143,22 @@
                                     <constraint firstItem="aKS-oc-LrT" firstAttribute="top" secondItem="4s5-OW-qAO" secondAttribute="bottom" constant="8" symbolic="YES" id="2m5-eb-CoG"/>
                                     <constraint firstItem="gR3-9k-qhK" firstAttribute="top" secondItem="kaV-Nf-KmS" secondAttribute="top" id="3N7-Qc-9t6"/>
                                     <constraint firstItem="gR3-9k-qhK" firstAttribute="top" secondItem="dLf-ee-K3I" secondAttribute="bottom" constant="17" id="68w-uX-tfn"/>
-                                    <constraint firstItem="oVn-9L-n2U" firstAttribute="leading" secondItem="LTk-1V-jZa" secondAttribute="trailing" constant="23" id="6Vg-1x-anx"/>
-                                    <constraint firstItem="oVn-9L-n2U" firstAttribute="trailing" secondItem="Gme-VA-sgd" secondAttribute="trailingMargin" constant="-42" id="6rr-bb-7YM"/>
                                     <constraint firstItem="Qnn-SP-eWm" firstAttribute="leading" secondItem="4s5-OW-qAO" secondAttribute="leading" id="7pQ-g5-nsB"/>
                                     <constraint firstItem="aKS-oc-LrT" firstAttribute="trailing" secondItem="dLf-ee-K3I" secondAttribute="trailing" id="95T-z2-og9"/>
-                                    <constraint firstItem="LTk-1V-jZa" firstAttribute="baseline" secondItem="oVn-9L-n2U" secondAttribute="baseline" id="9rQ-Pd-sIs"/>
                                     <constraint firstItem="kaV-Nf-KmS" firstAttribute="leading" secondItem="aKS-oc-LrT" secondAttribute="trailing" constant="8" id="9xN-e6-8l1"/>
                                     <constraint firstAttribute="trailing" secondItem="kaV-Nf-KmS" secondAttribute="trailing" constant="8" id="Aic-J2-vWn"/>
+                                    <constraint firstItem="yIo-MW-aK8" firstAttribute="leading" secondItem="LTk-1V-jZa" secondAttribute="trailing" constant="74" id="BbW-9Q-6Vq"/>
                                     <constraint firstItem="YMl-Xb-JZb" firstAttribute="top" secondItem="LTk-1V-jZa" secondAttribute="top" id="CB3-nR-J9w"/>
                                     <constraint firstItem="aKS-oc-LrT" firstAttribute="leading" secondItem="YMl-Xb-JZb" secondAttribute="leading" id="DB8-CU-CVt"/>
                                     <constraint firstItem="fbC-rC-wNg" firstAttribute="top" secondItem="2Sy-na-foy" secondAttribute="bottom" constant="8" symbolic="YES" id="FYR-nO-ITz"/>
                                     <constraint firstItem="YMl-Xb-JZb" firstAttribute="top" secondItem="Gme-VA-sgd" secondAttribute="top" constant="24" id="Fln-Xa-IfS"/>
+                                    <constraint firstAttribute="trailing" secondItem="2Sy-na-foy" secondAttribute="trailing" constant="8" id="HjA-KL-RWE"/>
                                     <constraint firstAttribute="bottom" secondItem="kaV-Nf-KmS" secondAttribute="bottom" constant="69" id="Htu-b5-tkc"/>
                                     <constraint firstItem="2Sy-na-foy" firstAttribute="top" secondItem="LTk-1V-jZa" secondAttribute="bottom" constant="8" symbolic="YES" id="IHI-kR-YLk"/>
                                     <constraint firstItem="kaV-Nf-KmS" firstAttribute="leading" secondItem="gcE-GN-HV8" secondAttribute="leading" id="JCN-bF-N8T"/>
                                     <constraint firstItem="aKS-oc-LrT" firstAttribute="leading" secondItem="4s5-OW-qAO" secondAttribute="leading" id="Jn2-73-2k2"/>
                                     <constraint firstItem="ioi-3B-kK8" firstAttribute="top" secondItem="gcE-GN-HV8" secondAttribute="bottom" constant="8" id="L4J-bc-SwL"/>
                                     <constraint firstItem="aKS-oc-LrT" firstAttribute="trailing" secondItem="gR3-9k-qhK" secondAttribute="trailing" id="NoE-xi-abm"/>
-                                    <constraint firstItem="oVn-9L-n2U" firstAttribute="trailing" secondItem="2Sy-na-foy" secondAttribute="trailing" constant="-42" id="QWk-gv-Pl5"/>
                                     <constraint firstAttribute="trailing" secondItem="yIo-MW-aK8" secondAttribute="trailing" constant="8" id="Uqv-T7-tDV"/>
                                     <constraint firstItem="kaV-Nf-KmS" firstAttribute="trailing" secondItem="gcE-GN-HV8" secondAttribute="trailing" id="Uyf-se-YO9"/>
                                     <constraint firstItem="2Sy-na-foy" firstAttribute="leading" secondItem="fbC-rC-wNg" secondAttribute="leading" id="XWv-od-GU0"/>
