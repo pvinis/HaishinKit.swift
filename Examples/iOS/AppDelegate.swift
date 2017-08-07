@@ -3,9 +3,7 @@ import AVFoundation
 import HaishinKit
 
 class Logger {
-    func verbose(_ message: CustomStringConvertible) {
-        print("ok")
-    }
+    func verbose(_ message: CustomStringConvertible) {}
     func debug(_ message: CustomStringConvertible) {}
     func info(_ message: CustomStringConvertible) {}
     func warning(_ message: CustomStringConvertible) {}

@@ -94,8 +94,15 @@ final class LiveViewController: UIViewController {
         currentPosition = position
     }
 
-    @IBAction func toggleTorch(_ sender:UIButton) {
-        rtmpStream.torch = !rtmpStream.torch
+    func round512(_ value: Int) -> Int {
+        let rem = value % 512
+        if (rem == 0) {
+            return value
+        }
+        if (rem > 512/2) {
+            return value - rem + 512
+        }
+        return value - rem
     }
 
     @IBAction func on(slider:UISlider) {

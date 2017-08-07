@@ -169,10 +169,6 @@ open class RTMPConnection: EventDispatcher {
     open fileprivate(set) var connected:Bool = false
     /// The object encoding for this RTMPConnection instance.
     open var objectEncoding:UInt8 = RTMPConnection.defaultObjectEncoding
-    /// The statistics of total incoming bytes.
-    open var totalBytesIn:Int64 {
-        return socket.totalBytesIn
-    }
     /// The statistics of total outgoing bytes.
     open var totalBytesOut:Int64 {
         return socket.totalBytesOut
@@ -188,7 +184,7 @@ open class RTMPConnection: EventDispatcher {
     /// The statistics of outgoing bytes per second.
     dynamic open fileprivate(set) var currentBytesOutPerSecond:Int32 = 0
 
-    var socket:RTMPSocketCompatible!
+    var socket:RTMPSocket!
     var streams:[UInt32: RTMPStream] = [:]
     var sequence:Int64 = 0
     var bandWidth:UInt32 = 0
@@ -224,7 +220,6 @@ open class RTMPConnection: EventDispatcher {
     fileprivate var currentChunk:RTMPChunk? = nil
     fileprivate var measureInterval:Int = 5
     fileprivate var fragmentedChunks:[UInt16:RTMPChunk] = [:]
-    fileprivate var previousTotalBytesIn:Int64 = 0
     fileprivate var previousTotalBytesOut:Int64 = 0
 
     override public init() {
@@ -270,10 +265,8 @@ open class RTMPConnection: EventDispatcher {
         self.arguments = arguments
         timer = Timer(timeInterval: 1.0, target: self, selector: #selector(RTMPConnection.on(timer:)), userInfo: nil, repeats: true)
         switch scheme {
-        case "rtmpt", "rtmpts":
-            socket = socket is RTMPTSocket ? socket : RTMPTSocket()
         default:
-            socket = socket is RTMPSocket ? socket : RTMPSocket()
+            socket = socket != nil ? socket : RTMPSocket()
         }
         socket.delegate = self
         socket.securityLevel = uri.scheme == "rtmps" || uri.scheme == "rtmpts"  ? .negotiatedSSL : .none
@@ -402,11 +395,8 @@ open class RTMPConnection: EventDispatcher {
     }
 
     @objc private func on(timer:Timer) {
-        let totalBytesIn:Int64 = self.totalBytesIn
         let totalBytesOut:Int64 = self.totalBytesOut
-        currentBytesInPerSecond = Int32(totalBytesIn - previousTotalBytesIn)
         currentBytesOutPerSecond = Int32(totalBytesOut - previousTotalBytesOut)
-        previousTotalBytesIn = totalBytesIn
         previousTotalBytesOut = totalBytesOut
         previousQueueBytesOut.append(socket.queueBytesOut)
         for (_, stream) in streams {
@@ -458,7 +448,6 @@ extension RTMPConnection: RTMPSocketDelegate {
             sequence = 0
             currentChunk = nil
             currentTransactionId = 0
-            previousTotalBytesIn = 0
             previousTotalBytesOut = 0
             messages.removeAll()
             operations.removeAll()
@@ -467,19 +456,6 @@ extension RTMPConnection: RTMPSocketDelegate {
             break
         }
     }
-
-    func didSetTotalBytesIn(_ totalBytesIn: Int64) {
-        guard windowSizeS * (sequence + 1) <= totalBytesIn else {
-            return
-        }
-        socket.doOutput(chunk: RTMPChunk(
-            type: sequence == 0 ? .zero : .one,
-            streamId: RTMPChunk.StreamID.control.rawValue,
-            message: RTMPAcknowledgementMessage(UInt32(totalBytesIn))
-        ), locked: nil)
-        sequence += 1
-    }
-
     func listen(_ data:Data) {
         guard let chunk:RTMPChunk = currentChunk ?? RTMPChunk(data, size: socket.chunkSizeC) else {
             socket.inputBuffer.append(data)

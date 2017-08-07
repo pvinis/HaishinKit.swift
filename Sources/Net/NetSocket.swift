@@ -12,7 +12,6 @@ public class NetSocket: NSObject {
     var outputStream:OutputStream?
     var inputQueue:DispatchQueue = DispatchQueue(label: "com.haishinkit.HaishinKit.NetSocket.input")
     var securityLevel:StreamSocketSecurityLevel = .none
-    var totalBytesIn:Int64 = 0
     private(set) var totalBytesOut:Int64 = 0
     private(set) var queueBytesOut:Int64 = 0
 
@@ -98,7 +97,6 @@ public class NetSocket: NSObject {
         buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: windowSizeC)
         buffer?.initialize(to: 0, count: windowSizeC)
 
-        totalBytesIn = 0
         totalBytesOut = 0
         queueBytesOut = 0
         timeoutHandler = didTimeout
@@ -157,7 +155,6 @@ public class NetSocket: NSObject {
         }
         let length:Int = inputStream.read(buffer, maxLength: windowSizeC)
         if 0 < length {
-            totalBytesIn += Int64(length)
             inputBuffer.append(buffer, count: length)
             listen()
         }

@@ -32,23 +32,6 @@ open class NetStream: NSObject {
         }
     }
 
-#if os(iOS) || os(macOS)
-    open var torch:Bool {
-        get {
-            var torch:Bool = false
-            lockQueue.sync {
-                torch = self.mixer.videoIO.torch
-            }
-            return torch
-        }
-        set {
-            lockQueue.async {
-                self.mixer.videoIO.torch = newValue
-            }
-        }
-    }
-#endif
-
     #if os(iOS)
     open var syncOrientation:Bool = false {
         didSet {

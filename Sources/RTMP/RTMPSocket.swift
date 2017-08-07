@@ -1,34 +1,13 @@
 import Foundation
 
-protocol RTMPSocketCompatible: class {
-    var timeout:Int64 { get set }
-    var connected:Bool { get }
-    var timestamp:TimeInterval { get }
-    var chunkSizeC:Int { get set }
-    var chunkSizeS:Int { get set }
-    var totalBytesIn:Int64 { get }
-    var totalBytesOut:Int64 { get }
-    var queueBytesOut:Int64 { get }
-    var inputBuffer:Data { get set }
-    var securityLevel:StreamSocketSecurityLevel { get set }
-    weak var delegate:RTMPSocketDelegate? { get set }
-
-    @discardableResult
-    func doOutput(chunk:RTMPChunk, locked:UnsafeMutablePointer<UInt32>?) -> Int
-    func close(isDisconnected:Bool)
-    func connect(withName:String, port:Int)
-    func deinitConnection(isDisconnected:Bool)
-}
-
 // MARK: -
 protocol RTMPSocketDelegate: IEventDispatcher {
     func listen(_ data:Data)
     func didSetReadyState(_ readyState:RTMPSocket.ReadyState)
-    func didSetTotalBytesIn(_ totalBytesIn:Int64)
 }
 
 // MARK: -
-final class RTMPSocket: NetSocket, RTMPSocketCompatible {
+final class RTMPSocket: NetSocket {
     enum ReadyState: UInt8 {
         case uninitialized = 0
         case versionSent   = 1
@@ -49,11 +28,6 @@ final class RTMPSocket: NetSocket, RTMPSocketCompatible {
     var chunkSizeC:Int = RTMPChunk.defaultSize
     var chunkSizeS:Int = RTMPChunk.defaultSize
     weak var delegate:RTMPSocketDelegate? = nil
-    override var totalBytesIn: Int64 {
-        didSet {
-            delegate?.didSetTotalBytesIn(totalBytesIn)
-        }
-    }
 
     override var connected:Bool {
         didSet {

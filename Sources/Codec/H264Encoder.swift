@@ -18,7 +18,6 @@ final class H264Encoder: NSObject {
         "bitrate",
         "profileLevel",
         "dataRateLimits",
-        "enabledHardwareEncoder", // macOS only
         "maxKeyFrameIntervalDuration",
         "scalingMode",
     ]
@@ -62,14 +61,6 @@ final class H264Encoder: NSObject {
     var height:Int32 = H264Encoder.defaultHeight {
         didSet {
             guard height != oldValue else {
-                return
-            }
-            invalidateSession = true
-        }
-    }
-    var enabledHardwareEncoder:Bool = true {
-        didSet {
-            guard enabledHardwareEncoder != oldValue else {
                 return
             }
             invalidateSession = true
@@ -191,14 +182,6 @@ final class H264Encoder: NSObject {
                 "ScalingMode": scalingMode
             ] as NSObject
         ]
-
-#if os(OSX)
-        if (enabledHardwareEncoder) {
-            properties[kVTVideoEncoderSpecification_EncoderID] = "com.apple.videotoolbox.videoencoder.h264.gva" as NSObject
-            properties["EnableHardwareAcceleratedVideoEncoder"] = kCFBooleanTrue
-            properties["RequireHardwareAcceleratedVideoEncoder"] = kCFBooleanTrue
-        }
-#endif
 
         if (dataRateLimits != H264Encoder.defaultDataRateLimits) {
             properties[kVTCompressionPropertyKey_DataRateLimits] = dataRateLimits as NSObject

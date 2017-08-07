@@ -8,13 +8,9 @@ final class VideoIOComponent: IOComponent {
     let lockQueue:DispatchQueue = DispatchQueue(label: "com.haishinkit.HaishinKit.VideoIOComponent.lock")
     var context:CIContext?
     var drawable:NetStreamDrawable?
-    var formatDescription:CMVideoFormatDescription? {
-        didSet {
-            decoder.formatDescription = formatDescription
-        }
-    }
+    var formatDescription:CMVideoFormatDescription?
+
     lazy var encoder:H264Encoder = H264Encoder()
-    lazy var decoder:H264Decoder = H264Decoder()
     lazy var queue:ClockedQueue = {
         let queue:ClockedQueue = ClockedQueue()
         queue.delegate = self
@@ -24,7 +20,7 @@ final class VideoIOComponent: IOComponent {
     var effects:[VisualEffect] = []
     var contextFactory:CIContextFactory?
 
-#if os(iOS) || os(macOS)
+
     var fps:Float64 = AVMixer.defaultFPS {
         didSet {
             guard
@@ -65,22 +61,11 @@ final class VideoIOComponent: IOComponent {
                 if let connection:AVCaptureConnection = connection as? AVCaptureConnection {
                     if (connection.isVideoOrientationSupported) {
                         connection.videoOrientation = orientation
-                        if (torch) {
-                            setTorchMode(.on)
-                        }
+                        
                     }
                 }
             }
             drawable?.orientation = orientation
-        }
-    }
-
-    var torch:Bool = false {
-        didSet {
-            guard torch != oldValue else {
-                return
-            }
-            setTorchMode(torch ? .on : .off)
         }
     }
 
@@ -200,28 +185,11 @@ final class VideoIOComponent: IOComponent {
             }
         }
     }
-#endif
 
-    #if os(iOS)
-    var screen:ScreenCaptureSession? = nil {
-        didSet {
-            guard oldValue != screen else {
-                return
-            }
-            if let oldValue:ScreenCaptureSession = oldValue {
-                oldValue.delegate = nil
-            }
-            if let screen:ScreenCaptureSession = screen {
-                screen.delegate = self
-            }
-        }
-    }
-    #endif
 
     override init(mixer: AVMixer) {
         super.init(mixer: mixer)
         encoder.lockQueue = lockQueue
-        decoder.delegate = self
         #if os(iOS)
             if let orientation:AVCaptureVideoOrientation = DeviceUtil.videoOrientation(by: UIDevice.current.orientation) {
                 self.orientation = orientation
@@ -238,9 +206,6 @@ final class VideoIOComponent: IOComponent {
         mixer.session.beginConfiguration()
         defer {
             mixer.session.commitConfiguration()
-            if (torch) {
-                setTorchMode(.on)
-            }
         }
 
         output = nil
@@ -248,9 +213,7 @@ final class VideoIOComponent: IOComponent {
             input = nil
             return
         }
-        #if os(iOS)
-        screen = nil
-        #endif
+
 
         input = try AVCaptureDeviceInput(device: camera)
         mixer.session.addOutput(output)
@@ -270,20 +233,6 @@ final class VideoIOComponent: IOComponent {
         fps = fps * 1
         position = camera.position
         drawable?.position = camera.position
-    }
-
-    func setTorchMode(_ torchMode:AVCaptureTorchMode) {
-        guard let device:AVCaptureDevice = (input as? AVCaptureDeviceInput)?.device, device.isTorchModeSupported(torchMode) else {
-            lfLogger?.warning("torchMode(\(torchMode)) is not supported")
-            return
-        }
-        do {
-            try device.lockForConfiguration()
-            device.torchMode = torchMode
-            device.unlockForConfiguration()
-        } catch let error {
-            lfLogger?.error("while setting torch: \(error)")
-        }
     }
     func dispose() {
         drawable?.attachStream(nil)
@@ -355,17 +304,9 @@ extension VideoIOComponent: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 }
 
-extension VideoIOComponent: VideoDecoderDelegate {
-    // MARK: VideoDecoderDelegate
-    func sampleOutput(video sampleBuffer:CMSampleBuffer) {
-        queue.enqueue(sampleBuffer)
-    }
-}
-
 extension VideoIOComponent: ClockedQueueDelegate {
     // MARK: ClockedQueueDelegate
     func queue(_ buffer: CMSampleBuffer) {
-        mixer?.audioIO.playback.startQueueIfNeed()
         drawable?.draw(image: CIImage(cvPixelBuffer: buffer.imageBuffer!))
     }
 }

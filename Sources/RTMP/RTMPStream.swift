@@ -51,16 +51,6 @@ open class RTMPStream: NetStream {
         case failed                    = "NetStream.Failed"
         case multicastStreamReset      = "NetStream.MulticastStream.Reset"
         case pauseNotify               = "NetStream.Pause.Notify"
-        case playFailed                = "NetStream.Play.Failed"
-        case playFileStructureInvalid  = "NetStream.Play.FileStructureInvalid"
-        case playInsufficientBW        = "NetStream.Play.InsufficientBW"
-        case playNoSupportedTrackFound = "NetStream.Play.NoSupportedTrackFound"
-        case playReset                 = "NetStream.Play.Reset"
-        case playStart                 = "NetStream.Play.Start"
-        case playStop                  = "NetStream.Play.Stop"
-        case playStreamNotFound        = "NetStream.Play.StreamNotFound"
-        case playTransition            = "NetStream.Play.Transition"
-        case playUnpublishNotify       = "NetStream.Play.UnpublishNotify"
         case publishBadName            = "NetStream.Publish.BadName"
         case publishIdle               = "NetStream.Publish.Idle"
         case publishStart              = "NetStream.Publish.Start"
@@ -103,26 +93,6 @@ open class RTMPStream: NetStream {
             case .multicastStreamReset:
                 return "status"
             case .pauseNotify:
-                return "status"
-            case .playFailed:
-                return "error"
-            case .playFileStructureInvalid:
-                return "error"
-            case .playInsufficientBW:
-                return "warning"
-            case .playNoSupportedTrackFound:
-                return "status"
-            case .playReset:
-                return "status"
-            case .playStart:
-                return "status"
-            case .playStop:
-                return "status"
-            case .playStreamNotFound:
-                return "status"
-            case .playTransition:
-                return "status"
-            case .playUnpublishNotify:
                 return "status"
             case .publishBadName:
                 return "error"
@@ -172,32 +142,6 @@ open class RTMPStream: NetStream {
         }
     }
 
-    /**
-     flash.net.NetStreamPlayTransitions for Swift
-     */
-    public enum PlayTransition: String {
-        case append        = "append"
-        case appendAndWait = "appendAndWait"
-        case reset         = "reset"
-        case resume        = "resume"
-        case stop          = "stop"
-        case swap          = "swap"
-        case `switch`      = "switch"
-    }
-
-    public struct PlayOption: CustomStringConvertible {
-        public var len:Double = 0
-        public var offset:Double = 0
-        public var oldStreamName:String = ""
-        public var start:Double = 0
-        public var streamName:String = ""
-        public var transition:PlayTransition = .switch
-
-        public var description:String {
-            return Mirror(reflecting: self).description
-        }
-    }
-
     public enum WhatToDo {
         case stream
         case record
@@ -214,8 +158,6 @@ open class RTMPStream: NetStream {
     enum ReadyState: UInt8 {
         case initialized = 0
         case open        = 1
-        case play        = 2
-        case playing     = 3
         case publish     = 4
         case publishing  = 5
         case closed      = 6
@@ -234,10 +176,6 @@ open class RTMPStream: NetStream {
     open internal(set) var info:RTMPStreamInfo = RTMPStreamInfo()
     open fileprivate(set) var objectEncoding:UInt8 = RTMPConnection.defaultObjectEncoding
     open fileprivate(set) dynamic var currentFPS:UInt16 = 0
-    open var soundTransform:SoundTransform {
-        get { return mixer.audioIO.playback.soundTransform }
-        set { mixer.audioIO.playback.soundTransform = newValue }
-    }
 
     var id:UInt32 = RTMPStream.defaultID
     var readyState:ReadyState = .initialized {
@@ -248,21 +186,11 @@ open class RTMPStream: NetStream {
                 frameCount = 0
                 info.clear()
                 qosDelegate?.reset()
-            case .playing:
-                mixer.audioIO.playback.startRunning()
-                mixer.startPlaying()
             case .publishing:
                 send(handlerName: "@setDataFrame", arguments: "onMetaData", createMetaData())
                 mixer.audioIO.encoder.startRunning()
                 mixer.videoIO.encoder.startRunning()
                 sampler?.startRunning()
-            case .closed:
-                switch oldValue {
-                case .playing:
-                    mixer.stopPlaying()
-                default:
-                    break
-                }
             default:
                 break
             }
@@ -290,7 +218,6 @@ open class RTMPStream: NetStream {
     fileprivate var audioWasSent:Bool = false
     fileprivate var videoWasSent:Bool = false
     fileprivate var rtmpConnection:RTMPConnection
-    fileprivate var previousTotalBytesIn:Int64 = 0
     fileprivate var previousTotalBytesOut:Int64 = 0
 
     public init(connection: RTMPConnection) {
@@ -308,91 +235,6 @@ open class RTMPStream: NetStream {
         rtmpConnection.removeEventListener(Event.RTMP_STATUS, selector: #selector(RTMPStream.on(status:)), observer: self)
     }
 
-    open func receiveAudio(flag:Bool) {
-        lockQueue.async {
-            guard self.readyState == .playing else {
-                return
-            }
-            self.rtmpConnection.socket.doOutput(chunk: RTMPChunk(message: RTMPCommandMessage(
-                streamId: self.id,
-                transactionId: 0,
-                objectEncoding: self.objectEncoding,
-                commandName: "receiveAudio",
-                commandObject: nil,
-                arguments: [flag]
-            )), locked: nil)
-        }
-    }
-
-    open func receiveVideo(flag:Bool) {
-        lockQueue.async {
-            guard self.readyState == .playing else {
-                return
-            }
-            self.rtmpConnection.socket.doOutput(chunk: RTMPChunk(message: RTMPCommandMessage(
-                streamId: self.id,
-                transactionId: 0,
-                objectEncoding: self.objectEncoding,
-                commandName: "receiveVideo",
-                commandObject: nil,
-                arguments: [flag]
-            )), locked: nil)
-        }
-    }
-
-    open func play(_ arguments:Any?...) {
-        lockQueue.async {
-            guard let name:String = arguments.first as? String else {
-                switch self.readyState {
-                case .play, .playing:
-                    self.rtmpConnection.socket.doOutput(chunk: RTMPChunk(
-                        type: .zero,
-                        streamId: RTMPChunk.StreamID.audio.rawValue,
-                        message: RTMPCommandMessage(
-                            streamId: self.id,
-                            transactionId: 0,
-                            objectEncoding: self.objectEncoding,
-                            commandName: "closeStream",
-                            commandObject: nil,
-                            arguments: []
-                    )), locked: nil)
-                    self.info.resourceName = nil
-                default:
-                    break
-                }
-                return
-            }
-            while (self.readyState == .initialized) {
-                usleep(100)
-            }
-            self.info.resourceName = name
-            self.rtmpConnection.socket.doOutput(chunk: RTMPChunk(message: RTMPCommandMessage(
-                streamId: self.id,
-                transactionId: 0,
-                objectEncoding: self.objectEncoding,
-                commandName: "play",
-                commandObject: nil,
-                arguments: arguments
-            )), locked: nil)
-        }
-    }
-
-    open func seek(_ offset:Double) {
-        lockQueue.async {
-            guard self.readyState == .playing else {
-                return
-            }
-            self.rtmpConnection.socket.doOutput(chunk: RTMPChunk(message: RTMPCommandMessage(
-                streamId: self.id,
-                transactionId: 0,
-                objectEncoding: self.objectEncoding,
-                commandName: "seek",
-                commandObject: nil,
-                arguments: [offset]
-            )), locked: nil)
-        }
-    }
-
     open func publish(_ name: String?, whatToDo: WhatToDo = .stream, whatWillServerDo: WhatWillServerDo = .live) {
         lockQueue.async {
             guard let name:String = name else {
@@ -405,9 +247,7 @@ open class RTMPStream: NetStream {
                 switch self.readyState {
                 case .publish, .publishing:
                     self.readyState = .open
-                    #if os(iOS)
-                        self.mixer.videoIO.screen?.stopRunning()
-                    #endif
+
                     self.mixer.audioIO.encoder.delegate = nil
                     self.mixer.videoIO.encoder.delegate = nil
                     self.mixer.audioIO.encoder.stopRunning()
@@ -449,9 +289,7 @@ open class RTMPStream: NetStream {
                 self.info.resourceName = name
                 self.muxer.dispose()
                 self.muxer.delegate = self
-                #if os(iOS)
-                    self.mixer.videoIO.screen?.startRunning()
-                #endif
+               
                 self.mixer.audioIO.encoder.delegate = self.muxer
                 self.mixer.videoIO.encoder.delegate = self.muxer
                 self.sampler?.delegate = self.muxer
@@ -480,7 +318,6 @@ open class RTMPStream: NetStream {
         if (readyState == .closed || readyState == .initialized) {
             return
         }
-        play()
         publish(nil)
         lockQueue.sync {
             self.rtmpConnection.socket.doOutput(chunk: RTMPChunk(
@@ -598,13 +435,10 @@ open class RTMPStream: NetStream {
         frameCount = 0
         info.on(timer: timer)
 
-        let currentBytesInPerSecond = rtmpConnection.totalBytesIn - previousTotalBytesIn
         let currentBytesOutPerSecond = rtmpConnection.totalBytesOut - previousTotalBytesOut
-        previousTotalBytesIn = rtmpConnection.totalBytesIn
         previousTotalBytesOut = rtmpConnection.totalBytesOut
         statsDelegate?.stats(
             bitrate:videoSettings["bitrate"] as! UInt,
-            currentBytesInPerSecond: UInt(currentBytesInPerSecond),
             currentBytesOutPerSecond: UInt(currentBytesOutPerSecond),
             previousQueueBytesOut: UInt(rtmpConnection.socket.queueBytesOut)
         )
@@ -619,8 +453,6 @@ open class RTMPStream: NetStream {
         case RTMPConnection.Code.connectSuccess.rawValue:
             readyState = .initialized
             rtmpConnection.createStream(self)
-        case RTMPStream.Code.playStart.rawValue:
-            readyState = .playing
         case RTMPStream.Code.publishStart.rawValue:
             readyState = .publishing
         default:

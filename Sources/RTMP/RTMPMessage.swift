@@ -598,12 +598,8 @@ final class RTMPAudioMessage: RTMPMessage {
             return
         }
         if let config:AudioSpecificConfig = createAudioSpecificConfig() {
-            stream.mixer.audioIO.playback.fileTypeHint = kAudioFileAAC_ADTSType
-            stream.mixer.audioIO.playback.config = config
             return
         }
-        self.config = stream.mixer.audioIO.playback.config
-        stream.mixer.audioIO.playback.parseBytes(soundData)
     }
 
     func createAudioSpecificConfig() -> AudioSpecificConfig? {
@@ -685,7 +681,6 @@ final class RTMPVideoMessage: RTMPMessage {
                 kCFAllocatorDefault, blockBuffer!, true, nil, nil, stream.mixer.videoIO.formatDescription, 1, 1, &timing, 1, &sampleSizes, &sampleBuffer) == noErr else {
                 return
             }
-            status = stream.mixer.videoIO.decoder.decodeSampleBuffer(sampleBuffer!)
         }
     }
 
