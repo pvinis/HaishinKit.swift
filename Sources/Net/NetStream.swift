@@ -62,7 +62,7 @@ open class NetStream: NSObject {
         }
     }
 
-    open var videoSettings:[String:Any] {
+    open var videoSettings: [String:Any] {
         get {
             var videoSettings:[String:Any]!
             lockQueue.sync {

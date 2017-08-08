@@ -100,7 +100,7 @@
                                             <action selector="onSlider:" destination="9pv-A4-QxB" eventType="editingChanged" id="no0-Fi-g9d"/>
                                         </connections>
                                     </slider>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="512" minValue="512" maxValue="2048" translatesAutoresizingMaskIntoConstraints="NO" id="4s5-OW-qAO">
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="512" minValue="512" maxValue="9048" translatesAutoresizingMaskIntoConstraints="NO" id="4s5-OW-qAO">
                                         <rect key="frame" x="6" y="543" width="265" height="31"/>
                                         <connections>
                                             <action selector="onSlider:" destination="9pv-A4-QxB" eventType="valueChanged" id="Nm5-Xr-jcw"/>

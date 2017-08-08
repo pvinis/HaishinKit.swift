@@ -80,6 +80,11 @@ final class H264Encoder: NSObject {
                     kVTCompressionPropertyKey_AverageBitRate,
                     Int(self.bitrate) as CFTypeRef
                 )
+//                self.status = VTSessionSetProperty(
+//                    session,
+//                    kVTCompressionPropertyKey_DataRateLimits,
+//                    [Int(self.bitrate / 8), 1] as CFTypeRef
+//                )
             }
         }
     }

@@ -189,7 +189,7 @@ final class LiveViewController: UIViewController {
         case 0:
             rtmpStream.captureSettings["fps"] = 15.0
         case 1:
-            rtmpStream.captureSettings["fps"] = 30.0
+            rtmpStream.captureSettings["fps"] = 25.0
         case 2:
             rtmpStream.captureSettings["fps"] = 60.0
         default:
