@@ -23,8 +23,9 @@ public class NetSocket: NSObject {
     @discardableResult
     final public func doOutput(data:Data, locked:UnsafeMutablePointer<UInt32>? = nil) -> Int {
         OSAtomicAdd64(Int64(data.count), &queueBytesOut)
-        print("data \(data.count)")
-
+        if (data.count == 8193) {
+//        print("data \(data.count)")
+        }
         outputQueue.async {
             data.withUnsafeBytes { (buffer:UnsafePointer<UInt8>) -> Void in
                 self.doOutputProcess(buffer, maxLength: data.count)
@@ -79,8 +80,8 @@ public class NetSocket: NSObject {
 //            print("gone \(length)")
 //            print("rest \(queueBytesOut)")
             OSAtomicAdd64(-Int64(length), &queueBytesOut)
-            print("gone \(length)")
-            print("rest \(queueBytesOut)")
+//            print("gone \(length)")
+//            print("rest \(queueBytesOut)")
 
 
         }

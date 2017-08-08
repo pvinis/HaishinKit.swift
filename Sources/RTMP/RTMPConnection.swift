@@ -417,8 +417,13 @@ open class RTMPConnection: EventDispatcher {
             print(previousQueueBytesOut)
             print("down \(downCount)")
             print("  up \(upCount)")
+
+            for (_, stream) in streams {
+                print("fps \(stream.currentFPS)")
+            }
             if (downCount == measureInterval - 1) {
                 for (_, stream) in streams {
+
                     print("=====================will call for insuff")
                     //stream.qosDelegate?.didPublishInsufficientBW(stream, withConnection: self)
                 }
